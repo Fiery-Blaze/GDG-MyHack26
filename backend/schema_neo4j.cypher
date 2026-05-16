@@ -16,9 +16,9 @@ MERGE (:Species {name: 'Rhinoceros unicornis'});
 MERGE (:Species {name: 'Psittaciformes'});
 
 // Seed: Vet Clinics
-MERGE (v1:VetClinic {id: 'vet-001'}) SET v1.name = 'WildCare Veterinary Centre', v1.trust_score = 0.92, v1.availability_days = 2, v1.response_time_avg = 4;
-MERGE (v2:VetClinic {id: 'vet-002'}) SET v2.name = 'Asia Wildlife Health', v2.trust_score = 0.85, v2.availability_days = 5, v2.response_time_avg = 8;
-MERGE (v3:VetClinic {id: 'vet-003'}) SET v3.name = 'Regional Zoo Vet Services', v3.trust_score = 0.78, v3.availability_days = 3, v3.response_time_avg = 6;
+MERGE (v1:VetClinic {id: 'vet-001'}) SET v1.name = 'WildCare Veterinary Centre', v1.trust_score = 0.92, v1.availability_days = 2, v1.response_time_avg = 4, v1.specialisation = ['big cats', 'exotic mammals', 'surgery'];
+MERGE (v2:VetClinic {id: 'vet-002'}) SET v2.name = 'Asia Wildlife Health', v2.trust_score = 0.85, v2.availability_days = 5, v2.response_time_avg = 8, v2.specialisation = ['pandas', 'bears', 'conservation medicine'];
+MERGE (v3:VetClinic {id: 'vet-003'}) SET v3.name = 'Regional Zoo Vet Services', v3.trust_score = 0.78, v3.availability_days = 3, v3.response_time_avg = 6, v3.specialisation = ['birds', 'reptiles', 'small mammals'];
 
 // Vet-Species relationships
 MATCH (v:VetClinic {id: 'vet-001'}), (s:Species {name: 'Panthera tigris'}) MERGE (v)-[:TREATS]->(s);
@@ -30,6 +30,14 @@ MATCH (v:VetClinic {id: 'vet-003'}), (s:Species {name: 'Psittaciformes'}) MERGE 
 // Seed: Animals
 MERGE (a1:Animal {microchip_id: 'MC-001'}) SET a1.name = 'Raja', a1.species = 'Panthera tigris', a1.sex = 'male', a1.age = 4, a1.zoo_id = 'zoo-001';
 MERGE (a2:Animal {microchip_id: 'MC-002'}) SET a2.name = 'Luna', a2.species = 'Ailuropoda melanoleuca', a2.sex = 'female', a2.age = 6, a2.zoo_id = 'zoo-002';
+
+// TREATED_PATIENT: prior patient history (vet -> animal)
+MATCH (v:VetClinic {id: 'vet-001'}), (a:Animal {microchip_id: 'MC-001'})
+MERGE (v)-[:TREATED_PATIENT {date: '2024-03-15', condition: 'Annual checkup', outcome: 'healthy'}]->(a);
+MATCH (v:VetClinic {id: 'vet-002'}), (a:Animal {microchip_id: 'MC-002'})
+MERGE (v)-[:TREATED_PATIENT {date: '2024-01-20', condition: 'Dental procedure', outcome: 'recovered'}]->(a);
+MATCH (v:VetClinic {id: 'vet-001'}), (a:Animal {microchip_id: 'MC-002'})
+MERGE (v)-[:TREATED_PATIENT {date: '2023-11-05', condition: 'Post-transfer health screen', outcome: 'healthy'}]->(a);
 
 // Seed: Pet Owner (for lost pet matching)
 MERGE (o:PetOwner {name: 'Ahmad Rizal'}) SET o.contact = '+60123456789';
