@@ -2,44 +2,24 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --background: 222 47% 11%;
+    --foreground: 0 0% 100%;
+    --card: 222 47% 11%;
+    --card-foreground: 0 0% 100%;
+    --primary: 162 78% 54%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 220 30% 18%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 30% 18%;
+    --muted-foreground: 215 14% 44%;
+    --accent: 220 30% 18%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 26% 20%;
+    --input: 220 26% 20%;
+    --ring: 162 78% 54%;
     --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
   }
 
   * {
@@ -47,49 +27,61 @@
   }
 
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background-color: #06122C;
+    color: #ffffff;
     margin: 0;
   }
 }
 
-/* ── Dark-theme vars used by Landing, SLAMonitor, Orchestrator, Analytics ── */
+/* ── Brand color palette ── */
 :root {
-  --bg: #04080f;
-  --surface-1: rgba(255,255,255,0.03);
-  --surface-2: rgba(255,255,255,0.06);
-  --text-1: #e8eaf0;
-  --text-2: #9ca3af;
-  --text-3: #4b5563;
-  --text-primary: #e8eaf0;
-  --text-secondary: #6b7280;
-  --green: #00dc82;
-  --accent-green: #00e5a0;
+  --bg: #06122C;
+  --bg-alt: #0B1936;
+  --surface-1: rgba(255,255,255,0.04);
+  --surface-2: rgba(255,255,255,0.07);
+  --text-1: #FFFFFF;
+  --text-2: #6C757D;
+  --text-3: #4a5568;
+  --text-primary: #FFFFFF;
+  --text-secondary: #6C757D;
+
+  /* Brand accent – teal/mint */
+  --green: #2EE5B3;
+  --accent-green: #4AD2AB;
   --accent-blue: #3b82f6;
+
+  /* Semantic colours used by Analytics */
+  --red:    #f04e6d;
+  --amber:  #f5a623;
+  --blue:   #4f8ef7;
+  --purple: #9b6ef3;
+
   --border-subtle: rgba(255,255,255,0.07);
-  --border-strong: rgba(255,255,255,0.12);
+  --border-strong: rgba(255,255,255,0.13);
+  --border: rgba(255,255,255,0.09);
 }
 
-/* ── Utility classes for dark pages ── */
+/* ── Glass card ── */
 .glass-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 12px;
 }
 
+/* ── Buttons ── */
 .btn-primary {
-  background: linear-gradient(135deg, #00e5a0, #00b4d8);
-  color: #050a14;
+  background: linear-gradient(135deg, #2EE5B3, #4AD2AB);
+  color: #06122C;
   border: none;
   border-radius: 8px;
   padding: 0.55rem 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.875rem;
   cursor: pointer;
   transition: opacity 0.2s;
 }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-primary:hover:not(:disabled) { opacity: 0.9; }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary:hover:not(:disabled) { opacity: 0.88; }
 
 .btn-secondary {
   background: rgba(255,255,255,0.06);
@@ -105,20 +97,32 @@
 
 /* Landing-specific buttons */
 .btn { background: none; border: none; cursor: pointer; color: var(--text-1); display: inline-flex; align-items: center; gap: 0.4rem; }
-.btn-cta { background: linear-gradient(135deg,#00dc82,#00b8f5); color: #04080f; border-radius: 10px; padding: 0.65rem 1.4rem; font-weight: 700; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
+.btn-cta { background: linear-gradient(135deg, #2EE5B3, #4AD2AB); color: #06122C; border-radius: 10px; padding: 0.65rem 1.4rem; font-weight: 700; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; transition: opacity 0.2s; }
+.btn-cta:hover { opacity: 0.88; }
 .btn-cta-lg { padding: 0.75rem 1.75rem; font-size: 1rem; }
-.btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: var(--text-1); padding: 0.65rem 1.4rem; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
+.btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: var(--text-1); padding: 0.65rem 1.4rem; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s; }
+.btn-ghost:hover { background: rgba(255,255,255,0.1); }
 .btn-text { background: none; border: none; color: var(--text-2); padding: 0.4rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.875rem; }
 .btn-text:hover { color: var(--text-1); }
 
-.badge { display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
-.badge-success { background: rgba(0,229,160,0.12); color: #00e5a0; border: 1px solid rgba(0,229,160,0.25); }
-.badge-warning { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
-.badge-danger  { background: rgba(244,63,94,0.12);  color: #f43f5e; border: 1px solid rgba(244,63,94,0.25); }
+/* ── Badges ── */
+.badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; }
+.badge-success { background: rgba(46,229,179,0.12); color: #2EE5B3; border: 1px solid rgba(46,229,179,0.28); }
+.badge-warning { background: rgba(245,166,35,0.12); color: #f5a623; border: 1px solid rgba(245,166,35,0.28); }
+.badge-danger  { background: rgba(240,78,109,0.12); color: #f04e6d; border: 1px solid rgba(240,78,109,0.28); }
 
+/* Analytics badge variants */
+.badge-green  { background: rgba(46,229,179,0.12); color: #2EE5B3; border: 1px solid rgba(46,229,179,0.28); }
+.badge-red    { background: rgba(240,78,109,0.12); color: #f04e6d; border: 1px solid rgba(240,78,109,0.28); }
+.badge-amber  { background: rgba(245,166,35,0.12); color: #f5a623; border: 1px solid rgba(245,166,35,0.28); }
+.badge-blue   { background: rgba(79,142,247,0.12); color: #4f8ef7; border: 1px solid rgba(79,142,247,0.28); }
+.badge-purple { background: rgba(155,110,243,0.12); color: #9b6ef3; border: 1px solid rgba(155,110,243,0.28); }
+.badge-neutral { background: rgba(255,255,255,0.07); color: var(--text-2); border: 1px solid rgba(255,255,255,0.12); }
+
+/* ── Inputs ── */
 .input-dark {
   width: 100%;
-  background: rgba(5,10,20,0.6);
+  background: rgba(6,18,44,0.7);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 8px;
   padding: 0.6rem 0.9rem;
@@ -127,10 +131,10 @@
   outline: none;
   box-sizing: border-box;
 }
-.input-dark:focus { border-color: rgba(0,229,160,0.4); }
+.input-dark:focus { border-color: rgba(46,229,179,0.45); }
 
 .input {
-  background: rgba(9,15,28,0.9);
+  background: rgba(11,25,54,0.9);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 10px;
   padding: 0.65rem 1rem;
@@ -138,14 +142,57 @@
   font-size: 0.9rem;
   outline: none;
 }
-.input:focus { border-color: rgba(0,220,130,0.4); }
+.input:focus { border-color: rgba(46,229,179,0.45); }
 
-.gradient-text-green { background: linear-gradient(135deg,#00e5a0,#00b4d8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.g-green { background: linear-gradient(135deg,#00dc82,#00b8f5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+/* ── Gradient text ── */
+.gradient-text-green { background: linear-gradient(135deg, #2EE5B3, #4AD2AB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.g-green { background: linear-gradient(135deg, #2EE5B3, #4AD2AB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
+/* ── Risk bars ── */
 .risk-bar-wrap { height: 4px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
 .risk-bar { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
 
+/* Analytics specific */
+.risk-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
+.risk-fill  { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+
+/* ── Stat card (Analytics) ── */
+.stat-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 1.25rem 1.35rem;
+}
+
+/* ── Data table (Analytics) ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+.data-table thead tr {
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.data-table th {
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text-1);
+  vertical-align: middle;
+}
+.data-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+/* ── Animations ── */
 .animate-fade-in { animation: fadeIn 0.4s ease; }
 .animate-up { animation: slideUp 0.6s ease both; }
 .delay-1 { animation-delay: 0.1s; }
@@ -154,19 +201,22 @@
 .delay-4 { animation-delay: 0.4s; }
 .delay-5 { animation-delay: 0.5s; }
 
+/* ── Typography ── */
 .display { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.04em; }
 .headline { font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.03em; }
 .subheading { font-size: 1.1rem; color: var(--text-2); line-height: 1.7; max-width: 540px; }
 .label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); }
 
+/* ── Card variants ── */
 .feature-card { background: var(--surface-1); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 1.75rem; transition: border-color 0.2s; }
 .feature-card:hover { border-color: var(--border-strong); }
 .pricing-card { position: relative; background: var(--surface-1); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 2rem; }
 .card { background: var(--surface-1); border: 1px solid var(--border-subtle); border-radius: 12px; }
 
+/* ── Grid lines background ── */
 .grid-lines {
-  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 

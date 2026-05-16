@@ -1,13 +1,6 @@
 import { useRef, useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { runAgent } from '@/api/client'
-
-// ── types ──────────────────────────────────────────────────────────────────
+import { Upload, PawPrint } from 'lucide-react'
 
 interface Validation {
   valid: boolean
@@ -35,43 +28,25 @@ interface BatchResult {
   skipped: SkippedRow[]
 }
 
-// ── CSV parser ─────────────────────────────────────────────────────────────
-
 function parseCSV(text: string): Record<string, string>[] {
   const lines = text.trim().split('\n').filter(Boolean)
   if (lines.length < 2) return []
-  const headers = lines[0].split(',').map((h) => h.trim().replace(/^"|"$/g, ''))
-  return lines.slice(1).map((line) => {
-    const values = line.split(',').map((v) => v.trim().replace(/^"|"$/g, ''))
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''))
+  return lines.slice(1).map(line => {
+    const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''))
     return Object.fromEntries(headers.map((h, i) => [h, values[i] ?? '']))
   })
 }
 
-// ── validation badge helpers ───────────────────────────────────────────────
-
-function ValidationBadge({ valid }: { valid: boolean }) {
-  return (
-    <Badge variant={valid ? 'secondary' : 'destructive'}>
-      {valid ? 'Valid' : 'Invalid'}
-    </Badge>
-  )
-}
-
 function ValidationDetail({ v }: { v: Validation }) {
   return (
-    <div className="mt-1 space-y-0.5 text-xs">
-      {v.notes && <p className="text-muted-foreground">{v.notes}</p>}
-      {v.issues.map((issue, i) => (
-        <p key={i} className="text-destructive">Issue: {issue}</p>
-      ))}
-      {v.warnings.map((w, i) => (
-        <p key={i} className="text-yellow-600">Warning: {w}</p>
-      ))}
+    <div style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+      {v.notes && <p style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>{v.notes}</p>}
+      {v.issues.map((issue, i) => <p key={i} style={{ fontSize: '0.75rem', color: '#f43f5e' }}>Issue: {issue}</p>)}
+      {v.warnings.map((w, i) => <p key={i} style={{ fontSize: '0.75rem', color: '#f59e0b' }}>Warning: {w}</p>)}
     </div>
   )
 }
-
-// ── single import form ─────────────────────────────────────────────────────
 
 const emptyForm = { microchip_id: '', name: '', species: '', sex: '', age: '', zoo_id: '' }
 
@@ -81,7 +56,8 @@ function SingleImport() {
   const [result, setResult] = useState<{ success: boolean; data: Record<string, unknown>; error?: string } | null>(null)
 
   function set(field: string, value: string) {
-    setForm((f) => ({ ...f, [field]: value }))
+    if (field === 'age' && Number(value) < 0) return
+    setForm(f => ({ ...f, [field]: value }))
   }
 
   async function submit() {
@@ -89,10 +65,7 @@ function SingleImport() {
     setLoading(true)
     setResult(null)
     try {
-      const res = await runAgent('import_animal', {
-        ...form,
-        age: form.age ? Number(form.age) : undefined,
-      })
+      const res = await runAgent('import_animal', { ...form, age: form.age ? Number(form.age) : undefined })
       setResult(res)
     } catch (e: unknown) {
       setResult({ success: false, data: {}, error: String(e) })
@@ -101,59 +74,69 @@ function SingleImport() {
     }
   }
 
-  const v: Validation | undefined = result?.data?.validation as Validation | undefined
+  const v = result?.data?.validation as Validation | undefined
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <Label>Microchip ID <span className="text-destructive">*</span></Label>
-          <Input placeholder="e.g. MC-003" value={form.microchip_id} onChange={(e) => set('microchip_id', e.target.value)} />
-        </div>
-        <div className="space-y-1">
-          <Label>Name</Label>
-          <Input placeholder="e.g. Raja" value={form.name} onChange={(e) => set('name', e.target.value)} />
-        </div>
-        <div className="space-y-1">
-          <Label>Species <span className="text-destructive">*</span></Label>
-          <Input placeholder="e.g. Panthera tigris" value={form.species} onChange={(e) => set('species', e.target.value)} />
-        </div>
-        <div className="space-y-1">
-          <Label>Sex</Label>
-          <Input placeholder="male / female / unknown" value={form.sex} onChange={(e) => set('sex', e.target.value)} />
-        </div>
-        <div className="space-y-1">
-          <Label>Age (years)</Label>
-          <Input type="number" placeholder="e.g. 4" value={form.age} onChange={(e) => set('age', e.target.value)} />
-        </div>
-        <div className="space-y-1">
-          <Label>Zoo ID</Label>
-          <Input placeholder="e.g. zoo-001" value={form.zoo_id} onChange={(e) => set('zoo_id', e.target.value)} />
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        {[
+          { field: 'microchip_id', label: 'Microchip ID', placeholder: 'e.g. MC-003', required: true },
+          { field: 'name', label: 'Name', placeholder: 'e.g. Raja' },
+          { field: 'species', label: 'Species', placeholder: 'e.g. Panthera tigris', required: true },
+          { field: 'sex', label: 'Sex', placeholder: 'male / female / unknown' },
+          { field: 'age', label: 'Age (years)', placeholder: 'e.g. 4', type: 'number', min: '0' },
+          { field: 'zoo_id', label: 'Zoo ID', placeholder: 'e.g. zoo-001' },
+        ].map(({ field, label, placeholder, required, type, min }) => (
+          <div key={field} style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <label style={{ fontSize: '0.78rem', color: 'var(--text-2)', fontWeight: 500 }}>
+              {label} {required && <span style={{ color: '#f43f5e' }}>*</span>}
+            </label>
+            <input
+              className="input-dark"
+              type={type ?? 'text'}
+              placeholder={placeholder}
+              min={min}
+              value={form[field as keyof typeof form]}
+              onChange={e => set(field, e.target.value)}
+            />
+          </div>
+        ))}
       </div>
 
-      <Button onClick={submit} disabled={loading || !form.microchip_id || !form.species}>
-        {loading ? 'Validating & importing...' : 'Import Animal'}
-      </Button>
+      <div>
+        <button
+          className="btn-primary"
+          onClick={submit}
+          disabled={loading || !form.microchip_id || !form.species}
+        >
+          {loading ? 'Validating & importing…' : 'Import Animal'}
+        </button>
+      </div>
 
       {result && (
-        <div className={`border rounded-md p-4 space-y-2 ${result.success ? 'border-green-300 bg-green-50' : 'border-destructive/30 bg-destructive/5'}`}>
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-medium">{result.success ? 'Imported successfully' : 'Import rejected'}</p>
-            {v && <ValidationBadge valid={v.valid} />}
+        <div style={{
+          padding: '1rem', borderRadius: 10,
+          background: result.success ? 'rgba(0,220,130,0.06)' : 'rgba(244,63,94,0.06)',
+          border: `1px solid ${result.success ? 'rgba(0,220,130,0.25)' : 'rgba(244,63,94,0.25)'}`,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <p style={{ fontSize: '0.875rem', fontWeight: 600, color: result.success ? 'var(--green)' : '#f43f5e' }}>
+              {result.success ? 'Imported successfully' : 'Import rejected'}
+            </p>
+            {v && <span className={`badge ${v.valid ? 'badge-success' : 'badge-danger'}`}>{v.valid ? 'Valid' : 'Invalid'}</span>}
           </div>
           {result.success && result.data.animal_id != null && (
-            <p className="text-xs text-muted-foreground">DB id: {String(result.data.animal_id)} · Microchip: {String(result.data.microchip_id)}</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '0.35rem' }}>
+              DB id: {String(result.data.animal_id)} · Microchip: {String(result.data.microchip_id)}
+            </p>
           )}
           {v && <ValidationDetail v={v} />}
-          {result.error && <p className="text-xs text-destructive">{result.error}</p>}
+          {result.error && <p style={{ fontSize: '0.75rem', color: '#f43f5e', marginTop: '0.35rem' }}>{result.error}</p>}
         </div>
       )}
     </div>
   )
 }
-
-// ── CSV import ─────────────────────────────────────────────────────────────
 
 function CSVImport() {
   const fileRef = useRef<HTMLInputElement>(null)
@@ -165,9 +148,8 @@ function CSVImport() {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = (ev) => {
-      const text = ev.target?.result as string
-      setPreview(parseCSV(text))
+    reader.onload = ev => {
+      setPreview(parseCSV(ev.target?.result as string))
       setResult(null)
     }
     reader.readAsText(file)
@@ -185,31 +167,31 @@ function CSVImport() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-1">
-        <Label>CSV File</Label>
-        <p className="text-xs text-muted-foreground">
-          Required columns: <code>microchip_id</code>, <code>species</code> — optional: <code>name</code>, <code>sex</code>, <code>age</code>, <code>zoo_id</code>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+        <label style={{ fontSize: '0.78rem', color: 'var(--text-2)', fontWeight: 500 }}>CSV File</label>
+        <p style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>
+          Required: <code style={{ color: 'var(--green)' }}>microchip_id</code>, <code style={{ color: 'var(--green)' }}>species</code> — optional: name, sex, age, zoo_id
         </p>
-        <Input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFile} />
+        <input className="input-dark" type="file" accept=".csv,text/csv" onChange={onFile} ref={fileRef} />
       </div>
 
       {preview.length > 0 && (
         <>
-          <div className="border rounded-md overflow-auto max-h-48">
-            <table className="w-full text-xs">
-              <thead className="bg-muted">
-                <tr>
-                  {Object.keys(preview[0]).map((h) => (
-                    <th key={h} className="px-3 py-1.5 text-left font-medium text-muted-foreground">{h}</th>
+          <div style={{ borderRadius: 8, border: '1px solid var(--border-subtle)', overflow: 'auto', maxHeight: 200 }}>
+            <table style={{ width: '100%', fontSize: '0.78rem', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ background: 'rgba(255,255,255,0.04)' }}>
+                  {Object.keys(preview[0]).map(h => (
+                    <th key={h} style={{ padding: '0.5rem 0.75rem', textAlign: 'left', color: 'var(--text-2)', fontWeight: 500 }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {preview.map((row, i) => (
-                  <tr key={i} className="border-t">
+                  <tr key={i} style={{ borderTop: '1px solid var(--border-subtle)' }}>
                     {Object.values(row).map((v, j) => (
-                      <td key={j} className="px-3 py-1.5">{v}</td>
+                      <td key={j} style={{ padding: '0.5rem 0.75rem', color: 'var(--text-1)' }}>{v}</td>
                     ))}
                   </tr>
                 ))}
@@ -217,83 +199,101 @@ function CSVImport() {
             </table>
           </div>
 
-          <Button onClick={importBatch} disabled={loading}>
-            {loading ? `Validating ${preview.length} records...` : `Import ${preview.length} animals`}
-          </Button>
+          <div>
+            <button className="btn-primary" onClick={importBatch} disabled={loading}>
+              {loading ? `Validating ${preview.length} records…` : `Import ${preview.length} animals`}
+            </button>
+          </div>
         </>
       )}
 
       {result && (
-        <div className="space-y-3">
-          <div className="flex gap-3">
-            <Badge variant="secondary">{result.imported_count} imported</Badge>
-            {result.skipped_count > 0 && (
-              <Badge variant="destructive">{result.skipped_count} skipped</Badge>
-            )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <span className="badge badge-success">{result.imported_count} imported</span>
+            {result.skipped_count > 0 && <span className="badge badge-danger">{result.skipped_count} skipped</span>}
           </div>
 
-          {result.imported.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-green-700">Imported</p>
-              {result.imported.map((row) => (
-                <div key={row.microchip_id} className="border border-green-200 rounded-md px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">{row.microchip_id}</p>
-                    <ValidationBadge valid={true} />
-                    <span className="text-xs text-muted-foreground">id: {row.animal_id}</span>
-                  </div>
-                  <ValidationDetail v={row.validation} />
-                </div>
-              ))}
+          {result.imported.map(row => (
+            <div key={row.microchip_id} style={{
+              padding: '0.75rem 1rem', borderRadius: 8,
+              background: 'rgba(0,220,130,0.05)', border: '1px solid rgba(0,220,130,0.2)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>{row.microchip_id}</p>
+                <span className="badge badge-success">Valid</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>id: {row.animal_id}</span>
+              </div>
+              <ValidationDetail v={row.validation} />
             </div>
-          )}
+          ))}
 
-          {result.skipped.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-destructive">Skipped</p>
-              {result.skipped.map((row, i) => (
-                <div key={i} className="border border-destructive/30 rounded-md px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">{row.record.microchip_id || '(no microchip)'}</p>
-                    <ValidationBadge valid={false} />
-                  </div>
-                  <ValidationDetail v={row.validation} />
-                  {row.error && <p className="text-xs text-destructive mt-0.5">Write error: {row.error}</p>}
-                </div>
-              ))}
+          {result.skipped.map((row, i) => (
+            <div key={i} style={{
+              padding: '0.75rem 1rem', borderRadius: 8,
+              background: 'rgba(244,63,94,0.05)', border: '1px solid rgba(244,63,94,0.2)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>{row.record.microchip_id || '(no microchip)'}</p>
+                <span className="badge badge-danger">Invalid</span>
+              </div>
+              <ValidationDetail v={row.validation} />
+              {row.error && <p style={{ fontSize: '0.75rem', color: '#f43f5e', marginTop: '0.25rem' }}>Write error: {row.error}</p>}
             </div>
-          )}
+          ))}
         </div>
       )}
     </div>
   )
 }
 
-// ── page ───────────────────────────────────────────────────────────────────
-
 export default function AnimalImport() {
+  const [tab, setTab] = useState<'single' | 'csv'>('single')
+
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: 900, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Import Animals</h2>
-        <p className="text-muted-foreground">
+        <div className="label" style={{ marginBottom: '0.4rem' }}>Animal Management</div>
+        <h2 style={{ fontSize: '1.6rem', fontWeight: 700, letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <PawPrint size={22} color="var(--green)" /> Import Animals
+        </h2>
+        <p style={{ color: 'var(--text-2)', marginTop: '0.35rem', fontSize: '0.9rem' }}>
           Add animals individually or in bulk via CSV. Each record is validated by AI before import.
         </p>
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>Add Animals</CardTitle></CardHeader>
-        <CardContent>
-          <Tabs defaultValue="single">
-            <TabsList className="mb-4">
-              <TabsTrigger value="single">Single Entry</TabsTrigger>
-              <TabsTrigger value="csv">CSV Upload</TabsTrigger>
-            </TabsList>
-            <TabsContent value="single"><SingleImport /></TabsContent>
-            <TabsContent value="csv"><CSVImport /></TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+      <div className="glass-card" style={{ padding: '1.75rem' }}>
+        {/* Tab switcher */}
+        <div style={{
+          display: 'flex', gap: '0.25rem', marginBottom: '1.5rem',
+          background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '0.25rem',
+          width: 'fit-content',
+        }}>
+          {([['single', 'Single Entry'], ['csv', 'CSV Upload']] as const).map(([val, label]) => (
+            <button key={val} onClick={() => setTab(val)} style={{
+              padding: '0.45rem 1.1rem', borderRadius: 8, border: 'none', cursor: 'pointer',
+              background: tab === val ? 'rgba(0,220,130,0.15)' : 'transparent',
+              color: tab === val ? 'var(--green)' : 'var(--text-2)',
+              fontWeight: tab === val ? 600 : 400, fontSize: '0.875rem',
+              transition: 'all 0.15s',
+            }}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {tab === 'single' ? <SingleImport /> : <CSVImport />}
+      </div>
+
+      {tab === 'csv' && (
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', padding: '1rem 1.25rem', borderRadius: 10, background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.2)' }}>
+          <Upload size={16} color="var(--accent-blue)" style={{ marginTop: 2, flexShrink: 0 }} />
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-2)', lineHeight: 1.6 }}>
+            Download the <span style={{ color: 'var(--text-1)' }}>sample CSV template</span> to get the correct column format.
+            All records are validated by the AI import agent before being written to the database.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

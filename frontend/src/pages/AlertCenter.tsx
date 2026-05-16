@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Loader } from '@googlemaps/js-api-loader'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { runAgent } from '@/api/client'
+import { Bell, MapPin, Stethoscope } from 'lucide-react'
 
 interface ZooPoint {
   id: string
@@ -33,9 +32,7 @@ export default function AlertCenter() {
   const [data, setData] = useState<HeatmapData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [mapReady, setMapReady] = useState(false)
 
-  // Fetch heatmap data from backend
   useEffect(() => {
     runAgent('alert_heatmap', {})
       .then(res => {
@@ -46,194 +43,159 @@ export default function AlertCenter() {
       .finally(() => setLoading(false))
   }, [])
 
-  // Initialise Google Maps once data is ready and the div is mounted
   useEffect(() => {
     if (!data || !mapRef.current || !MAPS_API_KEY) return
-
-    const loader = new Loader({
-      apiKey: MAPS_API_KEY,
-      version: 'weekly',
-      libraries: ['visualization'],
-    })
-
+    const loader = new Loader({ apiKey: MAPS_API_KEY, version: 'weekly', libraries: ['visualization'] })
     loader.load().then(google => {
       const map = new google.maps.Map(mapRef.current!, {
-        center: { lat: 5.5, lng: 105.0 }, // Southeast Asia
+        center: { lat: 5.5, lng: 105.0 },
         zoom: 5,
         mapTypeId: 'terrain',
         styles: [
-          { featureType: 'water', stylers: [{ color: '#1a3a5c' }] },
-          { featureType: 'landscape', stylers: [{ color: '#0d1f2d' }] },
+          { featureType: 'water', stylers: [{ color: '#0d1f35' }] },
+          { featureType: 'landscape', stylers: [{ color: '#0a1520' }] },
+          { featureType: 'road', stylers: [{ color: '#1a2a3a' }] },
         ],
       })
-
-      // Heatmap layer — each zoo point is weighted by outbreak_count
       const heatPoints = data.zoonotic_locations.map(z =>
         new google.maps.visualization.WeightedLocation({
           location: new google.maps.LatLng(z.lat, z.lng),
           weight: z.outbreak_count,
         })
       )
-
       if (heatPoints.length > 0) {
         new google.maps.visualization.HeatmapLayer({
-          data: heatPoints,
-          map,
-          radius: 60,
-          opacity: 0.8,
-          gradient: [
-            'rgba(0, 255, 255, 0)',
-            'rgba(0, 255, 255, 1)',
-            'rgba(0, 191, 255, 1)',
-            'rgba(0, 127, 255, 1)',
-            'rgba(0, 63, 255, 1)',
-            'rgba(255, 0, 0, 1)',
-            'rgba(255, 0, 0, 1)',
-          ],
+          data: heatPoints, map, radius: 60, opacity: 0.8,
+          gradient: ['rgba(0,255,255,0)', 'rgba(0,255,255,1)', 'rgba(0,191,255,1)', 'rgba(0,127,255,1)', 'rgba(255,0,0,1)'],
         })
       }
-
-      // Vet clinic markers
       const infoWindow = new google.maps.InfoWindow()
       data.vet_clinics.forEach(vet => {
         const marker = new google.maps.Marker({
-          position: { lat: vet.lat, lng: vet.lng },
-          map,
-          title: vet.name,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 8,
-            fillColor: '#22c55e',
-            fillOpacity: 0.9,
-            strokeColor: '#fff',
-            strokeWeight: 2,
-          },
+          position: { lat: vet.lat, lng: vet.lng }, map, title: vet.name,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: '#00dc82', fillOpacity: 0.9, strokeColor: '#fff', strokeWeight: 2 },
         })
-
         marker.addListener('click', () => {
           infoWindow.setContent(
             `<div style="color:#000;font-family:sans-serif;max-width:200px">
-              <strong>${vet.name}</strong><br/>
-              Trust score: ${Math.round(vet.trust_score * 100)}%<br/>
+              <strong>${vet.name}</strong><br/>Trust score: ${Math.round(vet.trust_score * 100)}%<br/>
               Specialises in: ${(vet.specialisation ?? []).join(', ')}
             </div>`
           )
           infoWindow.open(map, marker)
         })
       })
-
-      setMapReady(true)
     })
   }, [data])
 
-  const totalOutbreaks = data?.zoonotic_locations.reduce(
-    (sum, z) => sum + z.outbreak_count, 0
-  ) ?? 0
+  const totalOutbreaks = data?.zoonotic_locations.reduce((sum, z) => sum + z.outbreak_count, 0) ?? 0
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: 1100, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Alert Center</h2>
-        <p className="text-muted-foreground">
+        <div className="label" style={{ marginBottom: '0.4rem' }}>Outbreak Monitoring</div>
+        <h2 style={{ fontSize: '1.6rem', fontWeight: 700, letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <Bell size={22} color="var(--green)" /> Alert Center
+        </h2>
+        <p style={{ color: 'var(--text-2)', marginTop: '0.35rem', fontSize: '0.9rem' }}>
           Zoonotic outbreak heatmap and vet clinic locations across the region
         </p>
       </div>
 
-      {/* Stats row */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Zoonotic Events</p>
-            <p className="text-3xl font-bold text-destructive">{totalOutbreaks}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Affected Locations</p>
-            <p className="text-3xl font-bold">{data?.zoonotic_locations.length ?? 0}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Vet Clinics Mapped</p>
-            <p className="text-3xl font-bold text-green-500">{data?.vet_clinics.length ?? 0}</p>
-          </CardContent>
-        </Card>
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1rem' }}>
+        {[
+          { label: 'Zoonotic Events', value: totalOutbreaks, color: '#f43f5e' },
+          { label: 'Affected Locations', value: data?.zoonotic_locations.length ?? 0, color: '#f59e0b' },
+          { label: 'Vet Clinics Mapped', value: data?.vet_clinics.length ?? 0, color: 'var(--green)' },
+        ].map(s => (
+          <div key={s.label} className="glass-card" style={{ padding: '1.5rem' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-2)', marginBottom: '0.75rem' }}>{s.label}</p>
+            <p style={{ fontSize: '2.2rem', fontWeight: 800, color: s.color, letterSpacing: '-0.04em', lineHeight: 1 }}>{s.value}</p>
+          </div>
+        ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.25rem' }}>
         {/* Map */}
-        <Card className="col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              Outbreak Heatmap
-              <span className="flex items-center gap-2 text-sm font-normal text-muted-foreground">
-                <span className="inline-block w-3 h-3 rounded-full bg-red-500" /> Zoonotic risk
-                <span className="inline-block w-3 h-3 rounded-full bg-green-500 ml-2" /> Vet clinic
+        <div className="glass-card" style={{ overflow: 'hidden' }}>
+          <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <MapPin size={15} color="var(--green)" />
+            <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Outbreak Heatmap</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginLeft: 'auto' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: 'var(--text-3)' }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#f43f5e', display: 'inline-block' }} /> Zoonotic risk
               </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            {loading && (
-              <div className="h-96 flex items-center justify-center text-muted-foreground">
-                Loading outbreak data…
-              </div>
-            )}
-            {error && (
-              <div className="h-96 flex items-center justify-center text-destructive text-sm">
-                {error}
-              </div>
-            )}
-            {!MAPS_API_KEY && !loading && (
-              <div className="h-96 flex items-center justify-center text-muted-foreground text-sm">
-                Set VITE_GOOGLE_MAPS_API_KEY in frontend/.env to enable the map.
-              </div>
-            )}
-            <div
-              ref={mapRef}
-              className="w-full rounded-b-lg"
-              style={{ height: '480px', display: MAPS_API_KEY && !loading ? 'block' : 'none' }}
-            />
-          </CardContent>
-        </Card>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: 'var(--text-3)' }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#00dc82', display: 'inline-block' }} /> Vet clinic
+              </span>
+            </div>
+          </div>
+
+          {loading && (
+            <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: '0.875rem' }}>
+              Loading outbreak data…
+            </div>
+          )}
+          {error && (
+            <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f43f5e', fontSize: '0.875rem' }}>
+              {error}
+            </div>
+          )}
+          {!MAPS_API_KEY && !loading && (
+            <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: '0.875rem', textAlign: 'center', padding: '2rem' }}>
+              Set <code style={{ color: 'var(--green)' }}>VITE_GOOGLE_MAPS_API_KEY</code> in frontend/.env to enable the map.
+            </div>
+          )}
+          <div ref={mapRef} style={{ height: 420, display: MAPS_API_KEY && !loading ? 'block' : 'none' }} />
+        </div>
 
         {/* Sidebar */}
-        <div className="space-y-4">
-          {/* Zoonotic locations */}
-          <Card>
-            <CardHeader><CardTitle className="text-sm">Outbreak Locations</CardTitle></CardHeader>
-            <CardContent className="space-y-2">
-              {data?.zoonotic_locations.length === 0 && (
-                <p className="text-sm text-muted-foreground">No zoonotic events recorded.</p>
-              )}
-              {data?.zoonotic_locations.map(z => (
-                <div key={z.id} className="flex items-center justify-between border rounded-md px-3 py-2">
-                  <span className="text-sm">{z.name}</span>
-                  <Badge variant="destructive">{z.outbreak_count} event{z.outbreak_count !== 1 ? 's' : ''}</Badge>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* Outbreak locations */}
+          <div className="glass-card" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+              <Bell size={14} color="#f43f5e" />
+              <p style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-2)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Outbreak Locations</p>
+            </div>
+            {!data?.zoonotic_locations.length ? (
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-3)' }}>No zoonotic events recorded.</p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {data.zoonotic_locations.map(z => (
+                  <div key={z.id} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '0.6rem 0.75rem', borderRadius: 8,
+                    background: 'rgba(244,63,94,0.06)', border: '1px solid rgba(244,63,94,0.15)',
+                  }}>
+                    <span style={{ fontSize: '0.85rem' }}>{z.name}</span>
+                    <span className="badge badge-danger">{z.outbreak_count} event{z.outbreak_count !== 1 ? 's' : ''}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Vet clinics */}
-          <Card>
-            <CardHeader><CardTitle className="text-sm">Vet Clinics</CardTitle></CardHeader>
-            <CardContent className="space-y-2">
+          <div className="glass-card" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+              <Stethoscope size={14} color="var(--green)" />
+              <p style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-2)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Vet Clinics</p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {data?.vet_clinics.map(v => (
-                <div key={v.id} className="border rounded-md px-3 py-2 space-y-1">
-                  <p className="text-sm font-medium">{v.name}</p>
-                  <div className="flex flex-wrap gap-1">
+                <div key={v.id} style={{ padding: '0.75rem', borderRadius: 8, background: 'rgba(0,220,130,0.05)', border: '1px solid rgba(0,220,130,0.15)' }}>
+                  <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.4rem' }}>{v.name}</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '0.4rem' }}>
                     {(v.specialisation ?? []).map(s => (
-                      <Badge key={s} variant="secondary" className="text-xs">{s}</Badge>
+                      <span key={s} style={{ padding: '0.15rem 0.45rem', borderRadius: 4, fontSize: '0.7rem', background: 'rgba(255,255,255,0.06)', color: 'var(--text-2)' }}>{s}</span>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Trust: {Math.round(v.trust_score * 100)}%
-                  </p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--green)' }}>Trust: {Math.round(v.trust_score * 100)}%</p>
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
