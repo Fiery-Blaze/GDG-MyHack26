@@ -1,0 +1,4 @@
+"""Analytics agent package."""
+from app.agents.analytics.agent import AnalyticsAgent
+
+__all__ = ["AnalyticsAgent"]

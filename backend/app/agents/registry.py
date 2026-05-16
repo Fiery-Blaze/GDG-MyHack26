@@ -49,3 +49,4 @@ def register_all_agents() -> None:
 
     for agent_class in [DocumentAgent, MatchingAgent, SLAAgent, AlertAgent, HealthRecordAgent, AnimalImportAgent]:
         registry.register(agent_class)
+

@@ -22,3 +22,6 @@ redis>=5.0.0
 
 # OCR (document agent)
 google-cloud-documentai>=2.24.0
+
+# Analytics (BigQuery + Looker Studio data source)
+google-cloud-bigquery>=3.20.0
