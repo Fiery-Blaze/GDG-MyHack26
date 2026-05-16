@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from app.agents.base import BaseAgent, AgentRequest, AgentResponse
 from app.core.database import get_pg_pool, get_neo4j_session
+from app.relations.animal import HasHealthEventRelation, TransferredRelation
 
 
 class HealthRecordAgent(BaseAgent):
@@ -51,17 +52,21 @@ class HealthRecordAgent(BaseAgent):
             )
 
         async with get_neo4j_session() as session:
+            # Create the HealthEvent node and link it via the typed relation in one query.
+            # HasHealthEventRelation provides the label and rel_type constants so
+            # neither the node label nor the edge name is hardcoded here.
             await session.run(
-                """
-                MATCH (a:Animal {microchip_id: $microchip_id})
-                CREATE (h:HealthEvent {
-                    record_id: $record_id,
+                f"""
+                MATCH (a:{HasHealthEventRelation.source_label}
+                      {{{HasHealthEventRelation.source_id_field}: $microchip_id}})
+                CREATE (h:{HasHealthEventRelation.target_label} {{
+                    {HasHealthEventRelation.target_id_field}: $record_id,
                     test_name: $test_name,
                     result: $result,
                     date: $date,
                     zoonotic_flag: $zoonotic_flag
-                })
-                CREATE (a)-[:HAS_HEALTH_EVENT]->(h)
+                }})
+                CREATE (a)-[:{HasHealthEventRelation.rel_type}]->(h)
                 SET a.last_health_check = $date
                 """,
                 microchip_id=payload["microchip_id"],
@@ -90,9 +95,10 @@ class HealthRecordAgent(BaseAgent):
 
         async with get_neo4j_session() as session:
             result = await session.run(
-                """
-                MATCH (a:Animal {microchip_id: $microchip_id})
-                OPTIONAL MATCH (a)-[:TRANSFERRED]->(t:Transfer)
+                f"""
+                MATCH (a:{TransferredRelation.source_label}
+                      {{{TransferredRelation.source_id_field}: $microchip_id}})
+                OPTIONAL MATCH (a)-[:{TransferredRelation.rel_type}]->(t:{TransferredRelation.target_label})
                 RETURN a, collect(t) AS transfers
                 """,
                 microchip_id=microchip_id,

@@ -22,6 +22,16 @@ interface Passport {
   transfers: unknown[]
 }
 
+interface VetSuggestion {
+  id: string
+  name: string
+  trust_score: number
+  availability_days: number
+  specialisation: string[]
+  prior_patient_count: number
+  reason: string
+}
+
 export default function HealthPassport() {
   const [microchipId, setMicrochipId] = useState('')
   const [passport, setPassport] = useState<Passport | null>(null)
@@ -30,6 +40,10 @@ export default function HealthPassport() {
 
   const [form, setForm] = useState({ test_name: '', result: '', date: '', vet_clinic: '', zoonotic_flag: false })
   const [adding, setAdding] = useState(false)
+
+  const [vetSuggestions, setVetSuggestions] = useState<VetSuggestion[]>([])
+  const [vetCondition, setVetCondition] = useState('')
+  const [loadingVets, setLoadingVets] = useState(false)
 
   async function fetchPassport() {
     if (!microchipId) return
@@ -42,6 +56,20 @@ export default function HealthPassport() {
       setError('Failed to fetch passport.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function suggestVets() {
+    if (!passport?.animal?.species) return
+    setLoadingVets(true)
+    try {
+      const res = await runAgent('suggest_vets', {
+        species: passport.animal.species,
+        condition: vetCondition,
+      })
+      setVetSuggestions(res.data.suggestions ?? [])
+    } finally {
+      setLoadingVets(false)
     }
   }
 
@@ -103,6 +131,51 @@ export default function HealthPassport() {
                     <Badge variant={r.result === 'negative' ? 'secondary' : 'destructive'}>{r.result}</Badge>
                     {r.zoonotic_flag && <Badge variant="destructive">Zoonotic</Badge>}
                   </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Suggested Vets</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex gap-3">
+                <Input
+                  placeholder="Condition or concern (optional)"
+                  value={vetCondition}
+                  onChange={(e) => setVetCondition(e.target.value)}
+                />
+                <Button onClick={suggestVets} disabled={loadingVets}>
+                  {loadingVets ? 'Finding...' : 'Find Vets'}
+                </Button>
+              </div>
+              {vetSuggestions.length === 0 && !loadingVets && (
+                <p className="text-sm text-muted-foreground">
+                  Click "Find Vets" to get AI-powered vet recommendations based on prior patients and specialisation.
+                </p>
+              )}
+              {vetSuggestions.map((v) => (
+                <div key={v.id} className="border rounded-md px-4 py-3 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium text-sm">{v.name}</p>
+                    <div className="flex gap-2">
+                      <Badge variant="secondary">Trust {Math.round(v.trust_score * 100)}%</Badge>
+                      <Badge variant="secondary">Avail. in {v.availability_days}d</Badge>
+                      {v.prior_patient_count > 0 && (
+                        <Badge>{v.prior_patient_count} prior patient{v.prior_patient_count > 1 ? 's' : ''}</Badge>
+                      )}
+                    </div>
+                  </div>
+                  {v.specialisation?.length > 0 && (
+                    <div className="flex gap-1 flex-wrap">
+                      {v.specialisation.map((s) => (
+                        <Badge key={s} variant="outline" className="text-xs">{s}</Badge>
+                      ))}
+                    </div>
+                  )}
+                  <p className="text-xs text-muted-foreground">{v.reason}</p>
                 </div>
               ))}
             </CardContent>
