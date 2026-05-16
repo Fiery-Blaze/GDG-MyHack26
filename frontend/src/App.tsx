@@ -8,9 +8,11 @@ import SLAMonitor from './pages/SLAMonitor'
 import AlertCenter from './pages/AlertCenter'
 import HealthPassport from './pages/HealthPassport'
 import Orchestrator from './pages/Orchestrator'
+import Animals from './pages/Animals'
 
 const pages: Record<string, React.ReactElement> = {
   dashboard: <Dashboard />,
+  animals: <Animals />,
   document: <DocumentAgent />,
   matching: <MatchingAgent />,
   sla: <SLAMonitor />,
