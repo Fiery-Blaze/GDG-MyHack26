@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+﻿import { useRef, useState } from 'react'
 import { runAgent } from '@/api/client'
 import { FileSearch, Upload, FileText } from 'lucide-react'
 
@@ -82,7 +82,7 @@ export default function DocumentScanner() {
       {/* Doc type tabs */}
       <div style={{
         display: 'flex', gap: '0.25rem',
-        background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '0.25rem',
+        background: 'rgba(6,18,44,0.04)', borderRadius: 10, padding: '0.25rem',
         width: 'fit-content',
       }}>
         {DOC_TABS.map(t => (
@@ -103,7 +103,7 @@ export default function DocumentScanner() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
           <p style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--green)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Input</p>
           {docType !== 'email' && (
-            <div style={{ display: 'flex', gap: '0.4rem', background: 'rgba(255,255,255,0.04)', borderRadius: 8, padding: '0.2rem' }}>
+            <div style={{ display: 'flex', gap: '0.4rem', background: 'rgba(6,18,44,0.04)', borderRadius: 8, padding: '0.2rem' }}>
               {([['text', 'Paste Text'], ['file', 'Upload File']] as const).map(([val, label]) => (
                 <button key={val} onClick={() => { setInputMode(val); resetState() }} style={{
                   padding: '0.35rem 0.8rem', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: '0.8rem',
@@ -173,7 +173,7 @@ export default function DocumentScanner() {
         <div className="glass-card" style={{ padding: '1.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
             <p style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--green)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Extracted Data</p>
-            <span className={`badge ${usedDocAI ? 'badge-success' : ''}`} style={!usedDocAI ? { background: 'rgba(255,255,255,0.08)', color: 'var(--text-2)', border: '1px solid var(--border-subtle)' } : {}}>
+            <span className={`badge ${usedDocAI ? 'badge-success' : ''}`} style={!usedDocAI ? { background: 'rgba(6,18,44,0.08)', color: 'var(--text-2)', border: '1px solid var(--border-subtle)' } : {}}>
               {usedDocAI ? 'Document AI + Gemini' : 'Gemini only'}
             </span>
           </div>
@@ -182,7 +182,7 @@ export default function DocumentScanner() {
             {Object.entries(result)
               .filter(([key]) => key !== '_extraction_method')
               .map(([key, value]) => (
-                <div key={key} style={{ padding: '0.75rem 1rem', borderRadius: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}>
+                <div key={key} style={{ padding: '0.75rem 1rem', borderRadius: 8, background: 'rgba(6,18,44,0.04)', border: '1px solid var(--border-subtle)' }}>
                   <p style={{ fontSize: '0.72rem', color: 'var(--text-3)', textTransform: 'capitalize', marginBottom: '0.35rem' }}>
                     {key.replace(/_/g, ' ')}
                   </p>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { AlertTriangle, TrendingUp, CheckCircle, Loader } from 'lucide-react';
 
 import { agentApi } from '../lib/api';
@@ -151,7 +151,7 @@ const SLAMonitor: React.FC = () => {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem' }}>
               {Object.entries(predResult).map(([k, v]) => (
-                <div key={k} style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 8, padding: '0.6rem' }}>
+                <div key={k} style={{ background: 'rgba(6,18,44,0.04)', borderRadius: 8, padding: '0.6rem' }}>
                   <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '0.2rem' }}>{k.replace(/_/g,' ')}</div>
                   <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>{Array.isArray(v) ? (v as string[]).join(', ') : String(v)}</div>
                 </div>

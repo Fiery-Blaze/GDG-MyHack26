@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { Cpu, Send, Loader, RefreshCw } from 'lucide-react';
 import { agentApi } from '../lib/api';
 
@@ -110,7 +110,7 @@ const Orchestrator: React.FC = () => {
               )}
               <div style={{
                 maxWidth: '72%',
-                background: m.role === 'user' ? 'linear-gradient(135deg, rgba(0,229,160,0.2), rgba(0,180,216,0.15))' : 'rgba(255,255,255,0.04)',
+                background: m.role === 'user' ? 'linear-gradient(135deg, rgba(0,229,160,0.2), rgba(0,180,216,0.15))' : 'rgba(6,18,44,0.04)',
                 border: m.role === 'user' ? '1px solid rgba(0,229,160,0.3)' : '1px solid var(--border-subtle)',
                 borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                 padding: '0.75rem 1rem',
@@ -121,7 +121,7 @@ const Orchestrator: React.FC = () => {
               }}>
                 {m.content.split('```').map((part, pi) =>
                   pi % 2 === 1 ? (
-                    <pre key={pi} style={{ background: 'rgba(5,10,20,0.6)', borderRadius: 8, padding: '0.75rem', overflowX: 'auto', fontSize: '0.78rem', margin: '0.5rem 0', border: '1px solid var(--border-subtle)' }}>{part.replace(/^json\n/, '')}</pre>
+                    <pre key={pi} style={{ background: '#FFFFFF', borderRadius: 8, padding: '0.75rem', overflowX: 'auto', fontSize: '0.78rem', margin: '0.5rem 0', border: '1px solid var(--border-subtle)' }}>{part.replace(/^json\n/, '')}</pre>
                   ) : (
                     <span key={pi}>{part.replace(/\*\*(.*?)\*\*/g, '$1')}</span>
                   )
@@ -155,12 +155,12 @@ const Orchestrator: React.FC = () => {
             {examplePrompts.map(p => (
               <button key={p} onClick={() => setInput(p)} style={{
                 padding: '0.3rem 0.7rem', borderRadius: 8,
-                background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)',
+                background: 'rgba(6,18,44,0.04)', border: '1px solid var(--border-subtle)',
                 color: 'var(--text-secondary)', fontSize: '0.78rem', cursor: 'pointer',
                 transition: 'all 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(0,229,160,0.3)')}
-              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(6,18,44,0.07)')}
               >
                 {p}
               </button>

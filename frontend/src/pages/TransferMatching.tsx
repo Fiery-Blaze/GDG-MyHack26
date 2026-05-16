@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { runAgent } from '@/api/client'
 import { ArrowLeftRight, Search, ShieldAlert, TrendingUp } from 'lucide-react'
 
@@ -128,14 +128,14 @@ export default function TransferMatching() {
             {matches.map((m, i) => (
               <div key={m.id} style={{
                 padding: '1rem', borderRadius: 10,
-                background: i === 0 ? 'rgba(0,220,130,0.06)' : 'rgba(255,255,255,0.03)',
+                background: i === 0 ? 'rgba(0,220,130,0.06)' : 'rgba(6,18,44,0.04)',
                 border: `1px solid ${i === 0 ? 'rgba(0,220,130,0.2)' : 'var(--border-subtle)'}`,
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem' }}>
                   <span style={{
                     width: 22, height: 22, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: '0.72rem', fontWeight: 700,
-                    background: i === 0 ? 'rgba(0,220,130,0.2)' : 'rgba(255,255,255,0.08)',
+                    background: i === 0 ? 'rgba(0,220,130,0.2)' : 'rgba(6,18,44,0.08)',
                     color: i === 0 ? 'var(--green)' : 'var(--text-2)',
                   }}>#{i + 1}</span>
                   <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>{m.name}</span>

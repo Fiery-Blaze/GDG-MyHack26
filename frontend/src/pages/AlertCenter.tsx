@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import { Loader } from '@googlemaps/js-api-loader'
 import { runAgent } from '@/api/client'
 import { Bell, MapPin, Stethoscope } from 'lucide-react'
@@ -134,7 +134,7 @@ export default function AlertCenter() {
 
           {loading && (
             <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: '0.875rem' }}>
-              Loading outbreak data…
+              Loading outbreak data…¦
             </div>
           )}
           {error && (
@@ -188,7 +188,7 @@ export default function AlertCenter() {
                   <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.4rem' }}>{v.name}</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '0.4rem' }}>
                     {(v.specialisation ?? []).map(s => (
-                      <span key={s} style={{ padding: '0.15rem 0.45rem', borderRadius: 4, fontSize: '0.7rem', background: 'rgba(255,255,255,0.06)', color: 'var(--text-2)' }}>{s}</span>
+                      <span key={s} style={{ padding: '0.15rem 0.45rem', borderRadius: 4, fontSize: '0.7rem', background: 'rgba(6,18,44,0.06)', color: 'var(--text-2)' }}>{s}</span>
                     ))}
                   </div>
                   <p style={{ fontSize: '0.75rem', color: 'var(--green)' }}>Trust: {Math.round(v.trust_score * 100)}%</p>

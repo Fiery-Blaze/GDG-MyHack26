@@ -15,28 +15,30 @@ const nav = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text-1)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#F0F4F8' }}>
+      {/* Dark navy sidebar */}
       <aside style={{
-        width: 220, flexShrink: 0,
-        borderRight: '1px solid var(--border-subtle)',
+        width: 224, flexShrink: 0,
+        background: '#06122C',
         display: 'flex', flexDirection: 'column',
         padding: '1.5rem 1rem',
-        background: 'rgba(4,8,15,0.98)',
       }}>
+        {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '2rem', padding: '0 0.5rem' }}>
           <div style={{
-            width: 28, height: 28, borderRadius: 7,
-            background: 'linear-gradient(135deg,#00dc82,#00b8f5)',
+            width: 30, height: 30, borderRadius: 8,
+            background: 'linear-gradient(135deg, #2EE5B3, #4AD2AB)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
           }}>
-            <Activity size={14} color="#04080f" />
+            <Activity size={15} color="#06122C" />
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '0.95rem', letterSpacing: '-0.02em' }}>ArkFlow</div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-3)' }}>Animal Transfer Platform</div>
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#FFFFFF', letterSpacing: '-0.02em' }}>ArkFlow</div>
+            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)' }}>Animal Transfer Platform</div>
           </div>
         </div>
 
+        {/* Nav links */}
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
           {nav.map(({ to, label, icon: Icon }) => (
             <NavLink
@@ -48,10 +50,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 padding: '0.55rem 0.75rem', borderRadius: 8,
                 fontSize: '0.84rem', textDecoration: 'none',
                 transition: 'all 0.15s',
-                background: isActive ? 'rgba(0,220,130,0.1)' : 'transparent',
-                color: isActive ? 'var(--green)' : 'var(--text-2)',
+                background: isActive ? 'rgba(46,229,179,0.12)' : 'transparent',
+                color: isActive ? '#2EE5B3' : 'rgba(255,255,255,0.6)',
                 fontWeight: isActive ? 600 : 400,
-                borderLeft: isActive ? '2px solid var(--green)' : '2px solid transparent',
+                borderLeft: isActive ? '2px solid #2EE5B3' : '2px solid transparent',
               })}
             >
               <Icon size={15} />
@@ -61,7 +63,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </nav>
       </aside>
 
-      <main style={{ flex: 1, padding: '2rem 2.5rem', overflow: 'auto' }}>
+      {/* Main content */}
+      <main style={{ flex: 1, padding: '2rem 2.5rem', overflow: 'auto', color: '#06122C' }}>
         {children}
       </main>
     </div>

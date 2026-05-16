@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+﻿import { useRef, useState } from 'react'
 import { runAgent } from '@/api/client'
 import { Upload, PawPrint } from 'lucide-react'
 
@@ -181,7 +181,7 @@ function CSVImport() {
           <div style={{ borderRadius: 8, border: '1px solid var(--border-subtle)', overflow: 'auto', maxHeight: 200 }}>
             <table style={{ width: '100%', fontSize: '0.78rem', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: 'rgba(255,255,255,0.04)' }}>
+                <tr style={{ background: 'rgba(6,18,44,0.04)' }}>
                   {Object.keys(preview[0]).map(h => (
                     <th key={h} style={{ padding: '0.5rem 0.75rem', textAlign: 'left', color: 'var(--text-2)', fontWeight: 500 }}>{h}</th>
                   ))}
@@ -266,7 +266,7 @@ export default function AnimalImport() {
         {/* Tab switcher */}
         <div style={{
           display: 'flex', gap: '0.25rem', marginBottom: '1.5rem',
-          background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '0.25rem',
+          background: 'rgba(6,18,44,0.04)', borderRadius: 10, padding: '0.25rem',
           width: 'fit-content',
         }}>
           {([['single', 'Single Entry'], ['csv', 'CSV Upload']] as const).map(([val, label]) => (

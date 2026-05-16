@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   BarChart2, Database, ExternalLink, RefreshCw,
   TrendingDown, TrendingUp, AlertTriangle, Globe,
@@ -10,7 +10,7 @@ import {
 
 import { agentApi } from '../lib/api';
 
-/* ── Mock BigQuery result data ── */
+/* Mock BigQuery result data */
 const speciesRisk = [
   { species: 'Sumatran Orangutan', individuals: 312, coi: 0.21, risk: 'critical', continent: 'Asia' },
   { species: 'Amur Leopard', individuals: 87, coi: 0.34, risk: 'critical', continent: 'Asia' },
@@ -46,11 +46,11 @@ const riskColor = { critical: '#f04e6d', high: '#f5a623', moderate: '#4f8ef7', l
 const riskBadge: Record<string, string> = { critical: 'badge-red', high: 'badge-amber', moderate: 'badge-blue', low: 'badge-green' };
 
 const tooltipStyle = {
-  contentStyle: { background: '#0d1526', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, fontSize: 12, color: '#f2f8ff' },
-  cursor: { fill: 'rgba(255,255,255,0.03)' },
+  contentStyle: { background: '#0d1526', border: '1px solid rgba(6,18,44,0.08)', borderRadius: 8, fontSize: 12, color: '#f2f8ff' },
+  cursor: { fill: 'rgba(6,18,44,0.04)' },
 };
 
-/* ── BigQuery SQL examples ── */
+/*  BigQuery SQL examples  */
 const queries = [
   {
     label: 'Species Inbreeding Risk',
@@ -195,7 +195,7 @@ const Analytics: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
               <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.1rem' }}>Global Transfer Efficiency</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-2)' }}>Planned vs. completed vs. delayed — last 7 months</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-2)' }}>Planned vs. completed vs. delayed —” last 7 months</div>
             </div>
             <span className="badge badge-green"><TrendingUp size={10} /> +3% MoM</span>
           </div>
@@ -240,7 +240,7 @@ const Analytics: React.FC = () => {
             <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>Species Inbreeding Risk</span>
             <span className="badge badge-neutral" style={{ fontSize: '0.68rem' }}>BigQuery result</span>
           </div>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>Coefficient of Inbreeding (CoI) · sorted by risk</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>Coefficient of Inbreeding (CoI)  sorted by risk</span>
         </div>
         <table className="data-table">
           <thead>
@@ -281,7 +281,7 @@ const Analytics: React.FC = () => {
                 {expandedRow === s.species && (
                   <tr>
                     <td colSpan={6} style={{ padding: 0 }}>
-                      <div style={{ padding: '0.75rem 1rem 0.75rem 2.5rem', background: 'rgba(255,255,255,0.02)', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
+                      <div style={{ padding: '0.75rem 1rem 0.75rem 2.5rem', background: 'rgba(255,255,255,0.02)', borderTop: '1px solid rgba(6,18,44,0.04)' }}>
                         <div style={{ display: 'flex', gap: '2rem', fontSize: '0.8rem', color: 'var(--text-2)' }}>
                           <span>📍 <strong style={{ color: 'var(--text-1)' }}>Primary range:</strong> {s.continent}</span>
                           <span>🧬 <strong style={{ color: 'var(--text-1)' }}>CoI threshold:</strong> &gt;0.125 = concern, &gt;0.25 = critical</span>
@@ -314,7 +314,7 @@ const Analytics: React.FC = () => {
                 onClick={() => { setActiveQuery(i); setQueryResult(null); }}
                 style={{
                   padding: '0.4rem 0.9rem', borderRadius: 8, fontSize: '0.8rem', fontWeight: 500,
-                  background: activeQuery === i ? 'rgba(79,142,247,0.15)' : 'rgba(255,255,255,0.04)',
+                  background: activeQuery === i ? 'rgba(79,142,247,0.15)' : 'rgba(6,18,44,0.04)',
                   border: `1px solid ${activeQuery === i ? 'rgba(79,142,247,0.4)' : 'var(--border)'}`,
                   color: activeQuery === i ? 'var(--blue)' : 'var(--text-2)',
                   cursor: 'pointer', transition: 'all 0.15s',
@@ -327,9 +327,9 @@ const Analytics: React.FC = () => {
           {/* SQL editor */}
           <div style={{ position: 'relative' }}>
             <pre style={{
-              background: 'rgba(4,8,15,0.8)', borderRadius: 10, padding: '1rem',
+              background: '#F5F7FA', borderRadius: 10, padding: '1rem',
               border: '1px solid var(--border)', fontSize: '0.8rem', lineHeight: 1.7,
-              color: '#c9d6e8', overflowX: 'auto', whiteSpace: 'pre',
+              color: '#06122C', overflowX: 'auto', whiteSpace: 'pre',
               maxHeight: 200, overflowY: 'auto',
             }}>
               {queries[activeQuery].sql.split('\n').map((line, i) => {
@@ -364,9 +364,9 @@ const Analytics: React.FC = () => {
             <div className="animate-up" style={{ marginTop: '1rem' }}>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-3)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Query Result</div>
               <pre style={{
-                background: 'rgba(4,8,15,0.8)', borderRadius: 10, padding: '1rem',
+                background: '#F5F7FA', borderRadius: 10, padding: '1rem',
                 border: '1px solid rgba(0,220,130,0.15)', fontSize: '0.78rem',
-                color: '#c9d6e8', overflowX: 'auto', maxHeight: 220, overflowY: 'auto',
+                color: '#06122C', overflowX: 'auto', maxHeight: 220, overflowY: 'auto',
               }}>{queryResult}</pre>
             </div>
           )}
@@ -392,7 +392,7 @@ const Analytics: React.FC = () => {
           </a>
         </div>
         {/* Placeholder iframe — replace src with real Looker embed URL */}
-        <div style={{ position: 'relative', background: 'rgba(4,8,15,0.6)', minHeight: 340, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+        <div style={{ position: 'relative', background: '#F5F7FA', minHeight: 340, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
           <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(155,110,243,0.12)', border: '1px solid rgba(155,110,243,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <BarChart2 size={24} color="var(--purple)" />
           </div>

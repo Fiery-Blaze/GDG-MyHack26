@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { runAgent } from '@/api/client'
 import { Heart, Search, Plus, Stethoscope } from 'lucide-react'
 
@@ -150,7 +150,7 @@ export default function HealthPassport() {
                     <div key={r.id} style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       padding: '0.75rem 1rem', borderRadius: 8,
-                      background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)',
+                      background: 'rgba(6,18,44,0.04)', border: '1px solid var(--border-subtle)',
                     }}>
                       <div>
                         <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>{r.test_name}</p>
@@ -196,7 +196,7 @@ export default function HealthPassport() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {vetSuggestions.map(v => (
-                <div key={v.id} style={{ padding: '1rem', borderRadius: 10, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}>
+                <div key={v.id} style={{ padding: '1rem', borderRadius: 10, background: 'rgba(6,18,44,0.04)', border: '1px solid var(--border-subtle)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                     <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>{v.name}</p>
                     <div style={{ display: 'flex', gap: '0.4rem' }}>
@@ -212,7 +212,7 @@ export default function HealthPassport() {
                   {v.specialisation?.length > 0 && (
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.5rem' }}>
                       {v.specialisation.map(s => (
-                        <span key={s} style={{ padding: '0.15rem 0.5rem', borderRadius: 6, fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: 'var(--text-2)', border: '1px solid var(--border-subtle)' }}>{s}</span>
+                        <span key={s} style={{ padding: '0.15rem 0.5rem', borderRadius: 6, fontSize: '0.72rem', background: 'rgba(6,18,44,0.06)', color: 'var(--text-2)', border: '1px solid var(--border-subtle)' }}>{s}</span>
                       ))}
                     </div>
                   )}

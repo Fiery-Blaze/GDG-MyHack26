@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { runAgent } from '@/api/client'
 import { AlertTriangle, CheckCircle, Clock, Activity } from 'lucide-react'
 
@@ -74,7 +74,7 @@ export default function Dashboard() {
               <div key={e.id} style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 padding: '0.75rem 1rem', borderRadius: 8,
-                background: 'rgba(255,255,255,0.03)',
+                background: 'rgba(6,18,44,0.04)',
                 border: '1px solid var(--border-subtle)',
               }}>
                 <span style={{ fontSize: '0.875rem', color: 'var(--text-1)' }}>Transfer #{e.id}</span>
