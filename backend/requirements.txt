@@ -1,0 +1,22 @@
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.7.0
+pydantic-settings>=2.2.0
+
+# Google AI
+google-genai>=1.0.0
+
+# Databases
+asyncpg>=0.29.0          # PostgreSQL async driver
+neo4j>=5.20.0            # Neo4j async driver
+
+# Alerts
+sendgrid>=6.11.0
+twilio>=9.0.0
+
+# Queues (SLA monitoring)
+celery>=5.4.0
+redis>=5.0.0
+
+# OCR (document agent)
+google-cloud-documentai>=2.24.0
