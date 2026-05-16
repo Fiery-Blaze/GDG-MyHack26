@@ -11,6 +11,10 @@ class TreatsRelation(Relation):
     source_id_field = "id"
     target_id_field = "name"
 
+    default_status = "active"
+    # Specialisation is either active or retired — no intermediate states.
+    allowed_transitions = {"active": ["retired"]}
+
 
 @register
 class TreatedPatientRelation(Relation):
@@ -21,6 +25,10 @@ class TreatedPatientRelation(Relation):
     rel_type = "TREATED_PATIENT"
     source_id_field = "id"
     target_id_field = "microchip_id"
+
+    default_status = "active"
+    # Treatment is recorded then closed; no reversal.
+    allowed_transitions = {"active": ["completed"]}
 
     date: str
     condition: str

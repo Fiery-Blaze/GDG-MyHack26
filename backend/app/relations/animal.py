@@ -11,13 +11,10 @@ class HasHealthEventRelation(Relation):
     source_id_field = "microchip_id"
     target_id_field = "record_id"
 
+    default_status = "active"
+    # Health records are immutable once created — no transitions defined.
+    allowed_transitions: dict = {}
 
-@register
-class TransferredRelation(Relation):
-    """Records that an animal was involved in a transfer."""
 
-    source_label = "Animal"
-    target_label = "Transfer"
-    rel_type = "TRANSFERRED"
-    source_id_field = "microchip_id"
-    target_id_field = "id"
+# TransferredRelation is intentionally absent: transfers are the source of truth
+# in PostgreSQL (transfers table). Neo4j does not maintain Transfer nodes.

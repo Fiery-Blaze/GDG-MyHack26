@@ -52,3 +52,18 @@ CREATE TABLE IF NOT EXISTS sla_events (
 
 CREATE INDEX IF NOT EXISTS idx_sla_events_status ON sla_events(status);
 CREATE INDEX IF NOT EXISTS idx_sla_events_deadline ON sla_events(deadline);
+
+-- Immutable audit log for every relation status transition
+CREATE TABLE IF NOT EXISTS relation_audit_log (
+    id           SERIAL PRIMARY KEY,
+    relation_id  TEXT NOT NULL,
+    rel_type     TEXT NOT NULL,
+    from_status  TEXT,                     -- NULL on creation
+    to_status    TEXT NOT NULL,
+    actor        TEXT NOT NULL,
+    reason       TEXT,
+    created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_relation_id ON relation_audit_log(relation_id);
+CREATE INDEX IF NOT EXISTS idx_audit_rel_type    ON relation_audit_log(rel_type);

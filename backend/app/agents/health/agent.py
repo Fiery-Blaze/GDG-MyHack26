@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from app.agents.base import BaseAgent, AgentRequest, AgentResponse
 from app.core.database import get_pg_pool, get_neo4j_session
-from app.relations.animal import HasHealthEventRelation, TransferredRelation
+from app.relations.animal import HasHealthEventRelation
 
 
 class HealthRecordAgent(BaseAgent):
@@ -52,9 +52,7 @@ class HealthRecordAgent(BaseAgent):
             )
 
         async with get_neo4j_session() as session:
-            # Create the HealthEvent node and link it via the typed relation in one query.
-            # HasHealthEventRelation provides the label and rel_type constants so
-            # neither the node label nor the edge name is hardcoded here.
+            # Step 1 — create the HealthEvent node and update the animal's last check date.
             await session.run(
                 f"""
                 MATCH (a:{HasHealthEventRelation.source_label}
@@ -66,7 +64,6 @@ class HealthRecordAgent(BaseAgent):
                     date: $date,
                     zoonotic_flag: $zoonotic_flag
                 }})
-                CREATE (a)-[:{HasHealthEventRelation.rel_type}]->(h)
                 SET a.last_health_check = $date
                 """,
                 microchip_id=payload["microchip_id"],
@@ -76,10 +73,21 @@ class HealthRecordAgent(BaseAgent):
                 date=payload["date"],
                 zoonotic_flag=payload.get("zoonotic_flag", False),
             )
+            # Step 2 — create the typed, governed edge with relation_id + audit log.
+            relation = await HasHealthEventRelation.create(
+                source_id=payload["microchip_id"],
+                target_id=str(record_id),
+                session=session,
+                created_by=payload.get("created_by", "system"),
+            )
 
         return AgentResponse(
             success=True,
-            data={"record_id": record_id, "zoonotic_flag": payload.get("zoonotic_flag", False)},
+            data={
+                "record_id": record_id,
+                "relation_id": relation.relation_id,
+                "zoonotic_flag": payload.get("zoonotic_flag", False),
+            },
         )
 
     async def _get_passport(self, payload: dict) -> AgentResponse:
@@ -95,12 +103,7 @@ class HealthRecordAgent(BaseAgent):
 
         async with get_neo4j_session() as session:
             result = await session.run(
-                f"""
-                MATCH (a:{TransferredRelation.source_label}
-                      {{{TransferredRelation.source_id_field}: $microchip_id}})
-                OPTIONAL MATCH (a)-[:{TransferredRelation.rel_type}]->(t:{TransferredRelation.target_label})
-                RETURN a, collect(t) AS transfers
-                """,
+                "MATCH (a:Animal {microchip_id: $microchip_id}) RETURN a",
                 microchip_id=microchip_id,
             )
             graph_data = await result.single()
@@ -112,7 +115,6 @@ class HealthRecordAgent(BaseAgent):
         }
         if graph_data:
             passport["animal"] = dict(graph_data["a"])
-            passport["transfers"] = [dict(t) for t in graph_data["transfers"] if t]
 
         # Scope data by requester role
         if requester_role == "public_health":

@@ -10,3 +10,7 @@ class OwnsRelation(Relation):
     rel_type = "OWNS"
     source_id_field = "name"
     target_id_field = "microchip_id"
+
+    default_status = "active"
+    # Ownership ends when the animal is transferred to another owner or deceased.
+    allowed_transitions = {"active": ["transferred", "deceased"]}

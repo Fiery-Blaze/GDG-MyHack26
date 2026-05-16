@@ -3,6 +3,7 @@ CREATE CONSTRAINT animal_microchip IF NOT EXISTS FOR (a:Animal) REQUIRE a.microc
 CREATE CONSTRAINT zoo_id IF NOT EXISTS FOR (z:Zoo) REQUIRE z.id IS UNIQUE;
 CREATE CONSTRAINT vet_id IF NOT EXISTS FOR (v:VetClinic) REQUIRE v.id IS UNIQUE;
 CREATE CONSTRAINT species_name IF NOT EXISTS FOR (s:Species) REQUIRE s.name IS UNIQUE;
+CREATE CONSTRAINT health_event_record_id IF NOT EXISTS FOR (h:HealthEvent) REQUIRE h.record_id IS UNIQUE;
 
 // Seed: Zoos
 MERGE (z1:Zoo {id: 'zoo-001'}) SET z1.name = 'Kuala Lumpur Zoo', z1.description = 'Large zoo with diverse wildlife, strong quarantine facilities', z1.cites_ready = true;

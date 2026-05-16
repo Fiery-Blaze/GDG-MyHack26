@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Heart, ArrowLeftRight, FileSearch } from 'lucide-react'
+import { LayoutDashboard, Heart, ArrowLeftRight, FileSearch, PawPrint } from 'lucide-react'
 
 const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/import', label: 'Import Animals', icon: PawPrint },
   { to: '/passport', label: 'Health Passport', icon: Heart },
   { to: '/matching', label: 'Transfer Matching', icon: ArrowLeftRight },
   { to: '/documents', label: 'Document Scanner', icon: FileSearch },
