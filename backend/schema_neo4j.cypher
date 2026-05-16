@@ -6,9 +6,9 @@ CREATE CONSTRAINT species_name IF NOT EXISTS FOR (s:Species) REQUIRE s.name IS U
 CREATE CONSTRAINT health_event_record_id IF NOT EXISTS FOR (h:HealthEvent) REQUIRE h.record_id IS UNIQUE;
 
 // Seed: Zoos
-MERGE (z1:Zoo {id: 'zoo-001'}) SET z1.name = 'Kuala Lumpur Zoo', z1.description = 'Large zoo with diverse wildlife, strong quarantine facilities', z1.cites_ready = true;
-MERGE (z2:Zoo {id: 'zoo-002'}) SET z2.name = 'Singapore Zoo', z2.description = 'Excellent genetic diversity programs, high transfer success rate', z2.cites_ready = true;
-MERGE (z3:Zoo {id: 'zoo-003'}) SET z3.name = 'Bangkok Safari World', z3.description = 'Specialises in big cats, CITES Appendix I handling experience', z3.cites_ready = true;
+MERGE (z1:Zoo {id: 'zoo-001'}) SET z1.name = 'Kuala Lumpur Zoo', z1.description = 'Large zoo with diverse wildlife, strong quarantine facilities', z1.cites_ready = true, z1.lat = 3.1726, z1.lng = 101.7012;
+MERGE (z2:Zoo {id: 'zoo-002'}) SET z2.name = 'Singapore Zoo', z2.description = 'Excellent genetic diversity programs, high transfer success rate', z2.cites_ready = true, z2.lat = 1.4043, z2.lng = 103.7930;
+MERGE (z3:Zoo {id: 'zoo-003'}) SET z3.name = 'Bangkok Safari World', z3.description = 'Specialises in big cats, CITES Appendix I handling experience', z3.cites_ready = true, z3.lat = 13.7563, z3.lng = 100.5018;
 
 // Seed: Species
 MERGE (:Species {name: 'Panthera tigris'});
@@ -17,9 +17,9 @@ MERGE (:Species {name: 'Rhinoceros unicornis'});
 MERGE (:Species {name: 'Psittaciformes'});
 
 // Seed: Vet Clinics
-MERGE (v1:VetClinic {id: 'vet-001'}) SET v1.name = 'WildCare Veterinary Centre', v1.trust_score = 0.92, v1.availability_days = 2, v1.response_time_avg = 4, v1.specialisation = ['big cats', 'exotic mammals', 'surgery'];
-MERGE (v2:VetClinic {id: 'vet-002'}) SET v2.name = 'Asia Wildlife Health', v2.trust_score = 0.85, v2.availability_days = 5, v2.response_time_avg = 8, v2.specialisation = ['pandas', 'bears', 'conservation medicine'];
-MERGE (v3:VetClinic {id: 'vet-003'}) SET v3.name = 'Regional Zoo Vet Services', v3.trust_score = 0.78, v3.availability_days = 3, v3.response_time_avg = 6, v3.specialisation = ['birds', 'reptiles', 'small mammals'];
+MERGE (v1:VetClinic {id: 'vet-001'}) SET v1.name = 'WildCare Veterinary Centre', v1.trust_score = 0.92, v1.availability_days = 2, v1.response_time_avg = 4, v1.specialisation = ['big cats', 'exotic mammals', 'surgery'], v1.lat = 3.1478, v1.lng = 101.6953;
+MERGE (v2:VetClinic {id: 'vet-002'}) SET v2.name = 'Asia Wildlife Health', v2.trust_score = 0.85, v2.availability_days = 5, v2.response_time_avg = 8, v2.specialisation = ['pandas', 'bears', 'conservation medicine'], v2.lat = 1.3521, v2.lng = 103.8198;
+MERGE (v3:VetClinic {id: 'vet-003'}) SET v3.name = 'Regional Zoo Vet Services', v3.trust_score = 0.78, v3.availability_days = 3, v3.response_time_avg = 6, v3.specialisation = ['birds', 'reptiles', 'small mammals'], v3.lat = 13.7252, v3.lng = 100.5153;
 
 // Vet-Species relationships
 MATCH (v:VetClinic {id: 'vet-001'}), (s:Species {name: 'Panthera tigris'}) MERGE (v)-[:TREATS]->(s);

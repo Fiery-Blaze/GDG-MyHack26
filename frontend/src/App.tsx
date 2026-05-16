@@ -5,6 +5,7 @@ import AnimalImport from '@/pages/AnimalImport'
 import HealthPassport from '@/pages/HealthPassport'
 import TransferMatching from '@/pages/TransferMatching'
 import DocumentScanner from '@/pages/DocumentScanner'
+import AlertCenter from '@/pages/AlertCenter'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/passport" element={<HealthPassport />} />
           <Route path="/matching" element={<TransferMatching />} />
           <Route path="/documents" element={<DocumentScanner />} />
+          <Route path="/alerts" element={<AlertCenter />} />
         </Routes>
       </Layout>
     </BrowserRouter>

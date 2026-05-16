@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Heart, ArrowLeftRight, FileSearch, PawPrint } from 'lucide-react'
+import { LayoutDashboard, Heart, ArrowLeftRight, FileSearch, PawPrint, Bell } from 'lucide-react'
 
 const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -7,6 +7,7 @@ const nav = [
   { to: '/passport', label: 'Health Passport', icon: Heart },
   { to: '/matching', label: 'Transfer Matching', icon: ArrowLeftRight },
   { to: '/documents', label: 'Document Scanner', icon: FileSearch },
+  { to: '/alerts', label: 'Alert Center', icon: Bell },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {
