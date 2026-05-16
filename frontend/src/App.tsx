@@ -8,17 +8,17 @@ import SLAMonitor from './pages/SLAMonitor'
 import AlertCenter from './pages/AlertCenter'
 import HealthPassport from './pages/HealthPassport'
 import Orchestrator from './pages/Orchestrator'
-import Animals from './pages/Animals'
+import Analytics from './pages/Analytics'
 
 const pages: Record<string, React.ReactElement> = {
   dashboard: <Dashboard />,
-  animals: <Animals />,
   document: <DocumentAgent />,
   matching: <MatchingAgent />,
   sla: <SLAMonitor />,
   alerts: <AlertCenter />,
   health: <HealthPassport />,
   orchestrator: <Orchestrator />,
+  analytics: <Analytics />,
 }
 
 function App() {

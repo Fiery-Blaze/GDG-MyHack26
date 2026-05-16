@@ -45,6 +45,8 @@ def register_all_agents() -> None:
     from app.agents.sla.agent import SLAAgent
     from app.agents.alert.agent import AlertAgent
     from app.agents.health.agent import HealthRecordAgent
+    from app.agents.analytics.agent import AnalyticsAgent
 
-    for agent_class in [DocumentAgent, MatchingAgent, SLAAgent, AlertAgent, HealthRecordAgent]:
+    for agent_class in [DocumentAgent, MatchingAgent, SLAAgent, AlertAgent, HealthRecordAgent, AnalyticsAgent]:
         registry.register(agent_class)
+

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, FileText, Shuffle, Clock, Bell, Heart,
-  Cpu, ChevronLeft, ChevronRight, Activity, ArrowLeft, Zap, PawPrint,
+  Cpu, ChevronLeft, ChevronRight, Activity, ArrowLeft, Zap, BarChart2,
 } from 'lucide-react';
-
 
 interface SidebarProps {
   active: string;
@@ -12,16 +11,15 @@ interface SidebarProps {
 }
 
 const nav = [
-  { id: 'dashboard',    label: 'Dashboard',       icon: <LayoutDashboard size={16} /> },
-  { id: 'animals',      label: 'Animals',          icon: <PawPrint size={16} /> },
-  { id: 'document',     label: 'Documents',        icon: <FileText size={16} /> },
-  { id: 'matching',     label: 'Matching',         icon: <Shuffle size={16} /> },
-  { id: 'sla',          label: 'SLA Monitor',      icon: <Clock size={16} /> },
-  { id: 'alerts',       label: 'Alerts',           icon: <Bell size={16} /> },
-  { id: 'health',       label: 'Health Passport',  icon: <Heart size={16} /> },
-  { id: 'orchestrator', label: 'AI Orchestrator',  icon: <Cpu size={16} /> },
+  { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={16} /> },
+  { id: 'document', label: 'Documents', icon: <FileText size={16} /> },
+  { id: 'matching', label: 'Matching', icon: <Shuffle size={16} /> },
+  { id: 'sla', label: 'SLA Monitor', icon: <Clock size={16} /> },
+  { id: 'alerts', label: 'Alerts', icon: <Bell size={16} /> },
+  { id: 'health', label: 'Health Passport', icon: <Heart size={16} /> },
+  { id: 'orchestrator', label: 'AI Orchestrator', icon: <Cpu size={16} /> },
+  { id: 'analytics', label: 'Analytics', icon: <BarChart2 size={16} /> },
 ];
-
 
 const Sidebar: React.FC<SidebarProps> = ({ active, onNavigate, onBackToLanding }) => {
   const [collapsed, setCollapsed] = useState(false);
