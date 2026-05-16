@@ -24,3 +24,8 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+# Gmail OAuth credentials
+gmail_credentials.json
+gmail_token.json
+google_credentials.json
