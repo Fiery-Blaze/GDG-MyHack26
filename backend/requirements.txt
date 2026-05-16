@@ -11,7 +11,9 @@ asyncpg>=0.29.0          # PostgreSQL async driver
 neo4j>=5.20.0            # Neo4j async driver
 
 # Alerts
-sendgrid>=6.11.0
+google-api-python-client>=2.120.0   # Gmail API
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.2.0         # one-time OAuth2 setup flow
 twilio>=9.0.0
 
 # Queues (SLA monitoring)

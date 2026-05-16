@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.agents.registry import register_all_agents
 from app.api.routes.agents import router as agents_router
 from app.core.database import close_connections
+import app.relations  # noqa: F401 — triggers @register decorators for all relation types
 
 
 @asynccontextmanager

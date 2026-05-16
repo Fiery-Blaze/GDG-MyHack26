@@ -1,12 +1,18 @@
 from datetime import datetime, timezone
 from app.agents.base import BaseAgent, AgentRequest, AgentResponse
 from app.core.database import get_pg_pool
+from app.services.notifications import (
+    generate_alert_message,
+    get_default_recipients,
+    notify_recipients,
+)
 
 
 class SLAAgent(BaseAgent):
     """
     Predicts transfer delay probability and monitors SLA deadlines.
     Uses a rule-based weighted score as the MVP fallback (swap for XGBoost later).
+    On breach detection: updates sla_events in DB, then dispatches email/SMS alerts.
     """
 
     handles = ["sla_predict", "sla_check", "sla_monitor"]
@@ -20,7 +26,7 @@ class SLAAgent(BaseAgent):
         elif intent == "sla_check":
             return await self._check(payload)
         elif intent == "sla_monitor":
-            return await self._monitor_all()
+            return await self._monitor_all(payload)
 
         return AgentResponse(success=False, data={}, error=f"Unknown intent: {intent}")
 
@@ -79,24 +85,67 @@ class SLAAgent(BaseAgent):
             return AgentResponse(success=False, data={}, error="Transfer not found")
         return AgentResponse(success=True, data=dict(row))
 
-    async def _monitor_all(self) -> AgentResponse:
+    async def _monitor_all(self, payload: dict) -> AgentResponse:
         now = datetime.now(timezone.utc)
+        recipients = payload.get("recipients") or get_default_recipients()
+
         pool = await get_pg_pool()
         async with pool.acquire() as conn:
             rows = await conn.fetch(
                 """
-                SELECT id, deadline, escalation_count, status
+                SELECT id, transfer_id, deadline, escalation_count, status
                 FROM sla_events
                 WHERE status NOT IN ('completed', 'missed')
                 AND deadline < NOW() + INTERVAL '1 hour'
                 """
             )
-        updates = []
+
+        notified = []
+        skipped = []
+
         for row in rows:
-            record = dict(row)
-            if row["deadline"] < now:
-                record["new_status"] = "missed"
-            else:
-                record["new_status"] = "at_risk"
-            updates.append(record)
-        return AgentResponse(success=True, data={"events": updates, "count": len(updates)})
+            new_status = "missed" if row["deadline"] < now else "at_risk"
+
+            async with pool.acquire() as conn:
+                # Only update + notify if notified_at is still NULL (first alert only)
+                updated = await conn.fetchval(
+                    """
+                    UPDATE sla_events
+                    SET status           = $1,
+                        escalation_count = escalation_count + 1,
+                        notified_at      = NOW()
+                    WHERE id = $2 AND notified_at IS NULL
+                    RETURNING id
+                    """,
+                    new_status,
+                    row["id"],
+                )
+
+            if updated is None:
+                skipped.append({"sla_event_id": row["id"], "reason": "already_notified"})
+                continue
+
+            # Generate an AI-polished alert message and send it
+            raw = (
+                f"SLA {new_status} for transfer #{row['transfer_id']}. "
+                f"Deadline was {row['deadline'].isoformat()}. "
+                f"Escalation count: {row['escalation_count'] + 1}."
+            )
+            message = await generate_alert_message(raw)
+            subject = f"[ArkFlow] SLA {new_status.upper()} — Transfer #{row['transfer_id']}"
+            sent = await notify_recipients(recipients, subject, message)
+            notified.append({
+                "sla_event_id": row["id"],
+                "transfer_id": row["transfer_id"],
+                "new_status": new_status,
+                "sent": sent,
+            })
+
+        return AgentResponse(
+            success=True,
+            data={
+                "notified": notified,
+                "skipped": skipped,
+                "total_checked": len(rows),
+            },
+        )
