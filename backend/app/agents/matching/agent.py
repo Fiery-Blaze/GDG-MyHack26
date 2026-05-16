@@ -1,7 +1,7 @@
 import json
 from app.agents.base import BaseAgent, AgentRequest, AgentResponse
 from app.core.config import settings
-from app.core.database import get_neo4j_session, get_pg_pool
+from app.core.database import get_neo4j_session
 from app.core.gemini import get_client
 
 
@@ -33,13 +33,6 @@ class MatchingAgent(BaseAgent):
         from_zoo_id = payload.get("from_zoo_id")
 
         description = f"{sex} {species}, {age} years old, transfer from zoo {from_zoo_id}"
-
-        # Embed the animal description
-        embed_result = await get_client().aio.models.embed_content(
-            model=settings.GEMINI_EMBEDDING_MODEL,
-            contents=description,
-        )
-        embedding = embed_result.embeddings[0].values
 
         # Query Neo4j for candidate zoos
         async with get_neo4j_session() as session:

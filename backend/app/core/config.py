@@ -16,7 +16,7 @@ class Settings(BaseSettings):
 
     # Neo4j AuraDB
     NEO4J_URI: str
-    NEO4J_USERNAME: str = "neo4j"
+    NEO4J_USERNAME: str = ""
     NEO4J_PASSWORD: str
 
     # Alerts
