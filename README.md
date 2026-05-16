@@ -86,3 +86,7 @@ Maintains a universal health passport across zoos, vets, and owners, ensuring da
 
 ## 👥 Team
 **saltAndPepperChips** - GDG MyHack 2026
+| Name | Role |
+|------|------|
+| Krishna | Full-Stack Developer |
+| Francis | Business Research |
