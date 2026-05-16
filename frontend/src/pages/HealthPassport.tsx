@@ -200,6 +200,16 @@ export default function HealthPassport() {
                 <Label>Vet Clinic</Label>
                 <Input value={form.vet_clinic} onChange={(e) => setForm({ ...form, vet_clinic: e.target.value })} />
               </div>
+              <div className="col-span-2 flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="zoonotic_flag"
+                  checked={form.zoonotic_flag}
+                  onChange={(e) => setForm({ ...form, zoonotic_flag: e.target.checked })}
+                  className="h-4 w-4"
+                />
+                <Label htmlFor="zoonotic_flag">Zoonotic flag (triggers alert)</Label>
+              </div>
               <div className="col-span-2">
                 <Button onClick={addRecord} disabled={adding}>{adding ? 'Saving...' : 'Add Record'}</Button>
               </div>

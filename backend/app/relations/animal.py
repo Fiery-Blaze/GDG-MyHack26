@@ -12,8 +12,6 @@ class HasHealthEventRelation(Relation):
     target_id_field = "record_id"
 
     default_status = "active"
-    # Health records are immutable once created — no transitions defined.
-    allowed_transitions: dict = {}
 
 
 # TransferredRelation is intentionally absent: transfers are the source of truth

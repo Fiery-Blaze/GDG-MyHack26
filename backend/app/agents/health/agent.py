@@ -87,19 +87,23 @@ class HealthRecordAgent(BaseAgent):
             )
 
         zoonotic_flag = payload.get("zoonotic_flag", False)
+        notification_error = None
         if zoonotic_flag:
-            raw = (
-                f"Zoonotic condition recorded for animal {payload['microchip_id']} "
-                f"(test: {payload['test_name']}, result: {payload['result']}) "
-                f"at {payload['vet_clinic']}. Immediate containment review required."
-            )
-            message = await generate_alert_message(raw)
-            recipients = get_default_recipients()
-            await notify_recipients(
-                recipients,
-                subject=f"[ArkFlow] Zoonotic Flag — {payload['microchip_id']}",
-                message=message,
-            )
+            try:
+                raw = (
+                    f"Zoonotic condition recorded for animal {payload['microchip_id']} "
+                    f"(test: {payload['test_name']}, result: {payload['result']}) "
+                    f"at {payload['vet_clinic']}. Immediate containment review required."
+                )
+                message = await generate_alert_message(raw)
+                recipients = get_default_recipients()
+                await notify_recipients(
+                    recipients,
+                    subject=f"[ArkFlow] Zoonotic Flag — {payload['microchip_id']}",
+                    message=message,
+                )
+            except Exception as e:
+                notification_error = str(e)
 
         return AgentResponse(
             success=True,
@@ -107,6 +111,7 @@ class HealthRecordAgent(BaseAgent):
                 "record_id": record_id,
                 "relation_id": relation.relation_id,
                 "zoonotic_flag": zoonotic_flag,
+                **({"notification_error": notification_error} if notification_error else {}),
             },
         )
 

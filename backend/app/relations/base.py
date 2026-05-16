@@ -59,8 +59,10 @@ class Relation(BaseModel):
 
     @classmethod
     def _edge_props(cls, instance: Relation) -> dict:
-        """All fields that should be stored as Neo4j edge properties."""
-        return instance.model_dump(exclude={"source_id", "target_id"})
+        """All fields that should be stored as Neo4j edge properties.
+        Filters out None and dict values — Neo4j only accepts primitives and primitive arrays."""
+        raw = instance.model_dump(exclude={"source_id", "target_id"})
+        return {k: v for k, v in raw.items() if v is not None and not isinstance(v, dict)}
 
     @classmethod
     def _validate_transition(cls, current: str, new: str) -> None:
