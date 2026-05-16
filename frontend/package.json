@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.8",
+    "recharts": "^2.12.7",
     "@radix-ui/react-tabs": "^1.1.13",
     "axios": "^1.16.1",
     "clsx": "^2.1.1",

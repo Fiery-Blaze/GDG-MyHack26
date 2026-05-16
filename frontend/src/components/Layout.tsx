@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Heart, ArrowLeftRight, FileSearch, PawPrint, Bell } from 'lucide-react'
+import { LayoutDashboard, Heart, ArrowLeftRight, FileSearch, PawPrint, Bell, BarChart2, Clock, Cpu } from 'lucide-react'
 
 const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -8,6 +8,9 @@ const nav = [
   { to: '/matching', label: 'Transfer Matching', icon: ArrowLeftRight },
   { to: '/documents', label: 'Document Scanner', icon: FileSearch },
   { to: '/alerts', label: 'Alert Center', icon: Bell },
+  { to: '/sla', label: 'SLA Monitor', icon: Clock },
+  { to: '/analytics', label: 'Analytics', icon: BarChart2 },
+  { to: '/orchestrator', label: 'AI Orchestrator', icon: Cpu },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {
