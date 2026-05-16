@@ -2,6 +2,11 @@ from datetime import datetime, timezone
 from app.agents.base import BaseAgent, AgentRequest, AgentResponse
 from app.core.database import get_pg_pool, get_neo4j_session
 from app.relations.animal import HasHealthEventRelation
+from app.services.notifications import (
+    generate_alert_message,
+    get_default_recipients,
+    notify_recipients,
+)
 
 
 class HealthRecordAgent(BaseAgent):
@@ -81,12 +86,27 @@ class HealthRecordAgent(BaseAgent):
                 created_by=payload.get("created_by", "system"),
             )
 
+        zoonotic_flag = payload.get("zoonotic_flag", False)
+        if zoonotic_flag:
+            raw = (
+                f"Zoonotic condition recorded for animal {payload['microchip_id']} "
+                f"(test: {payload['test_name']}, result: {payload['result']}) "
+                f"at {payload['vet_clinic']}. Immediate containment review required."
+            )
+            message = await generate_alert_message(raw)
+            recipients = get_default_recipients()
+            await notify_recipients(
+                recipients,
+                subject=f"[ArkFlow] Zoonotic Flag — {payload['microchip_id']}",
+                message=message,
+            )
+
         return AgentResponse(
             success=True,
             data={
                 "record_id": record_id,
                 "relation_id": relation.relation_id,
-                "zoonotic_flag": payload.get("zoonotic_flag", False),
+                "zoonotic_flag": zoonotic_flag,
             },
         )
 

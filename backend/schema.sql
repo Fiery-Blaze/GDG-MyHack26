@@ -47,8 +47,12 @@ CREATE TABLE IF NOT EXISTS sla_events (
     deadline         TIMESTAMPTZ NOT NULL,
     status           TEXT NOT NULL DEFAULT 'active',
     escalation_count INT DEFAULT 0,
+    notified_at      TIMESTAMPTZ,          -- set on first notification; prevents double-alert
     created_at       TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Add notified_at to existing tables (safe to re-run)
+ALTER TABLE sla_events ADD COLUMN IF NOT EXISTS notified_at TIMESTAMPTZ;
 
 CREATE INDEX IF NOT EXISTS idx_sla_events_status ON sla_events(status);
 CREATE INDEX IF NOT EXISTS idx_sla_events_deadline ON sla_events(deadline);
