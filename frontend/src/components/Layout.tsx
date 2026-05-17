@@ -13,7 +13,7 @@ const nav = [
   { to: '/orchestrator', label: 'AI Orchestrator', icon: Cpu },
 ]
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children, onGoHome }: { children: React.ReactNode; onGoHome?: () => void }) {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#F0F4F8' }}>
       {/* Dark navy sidebar */}
@@ -23,8 +23,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         display: 'flex', flexDirection: 'column',
         padding: '1.5rem 1rem',
       }}>
-        {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '2rem', padding: '0 0.5rem' }}>
+        {/* Logo — click to return to landing */}
+        <div
+          onClick={onGoHome}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '2rem', padding: '0 0.5rem', cursor: 'pointer', userSelect: 'none' }}
+        >
           <div style={{
             width: 30, height: 30, borderRadius: 8,
             background: 'linear-gradient(135deg, #2EE5B3, #4AD2AB)',

@@ -28,6 +28,8 @@ export default defineConfig({
     },
   },
   define: {
-    'import.meta.env.VITE_GOOGLE_MAPS_API_KEY': JSON.stringify(env.VITE_GOOGLE_MAPS_API_KEY ?? ''),
+    'import.meta.env.VITE_GOOGLE_MAPS_API_KEY': JSON.stringify(
+      env.VITE_GOOGLE_MAPS_API_KEY ?? process.env.VITE_GOOGLE_MAPS_API_KEY ?? ''
+    ),
   },
 })

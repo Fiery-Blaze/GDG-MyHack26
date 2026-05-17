@@ -57,12 +57,10 @@ export default function AlertCenter() {
           { featureType: 'road', stylers: [{ color: '#1a2a3a' }] },
         ],
       })
-      const heatPoints = data.zoonotic_locations.map(z =>
-        new google.maps.visualization.WeightedLocation({
-          location: new google.maps.LatLng(z.lat, z.lng),
-          weight: z.outbreak_count,
-        })
-      )
+      const heatPoints = data.zoonotic_locations.map(z => ({
+        location: new google.maps.LatLng(z.lat, z.lng),
+        weight: z.outbreak_count,
+      }))
       if (heatPoints.length > 0) {
         new google.maps.visualization.HeatmapLayer({
           data: heatPoints, map, radius: 60, opacity: 0.8,
