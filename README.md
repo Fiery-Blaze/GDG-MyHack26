@@ -64,46 +64,32 @@ Runs population management queries on **Google BigQuery** — species inbreeding
 
 ## 🛠️ Tech Stack
 
-### Frontend
-| Layer | Technology |
-|---|---|
-| Framework | React 19 + TypeScript |
-| Build | Vite 8 |
-| Styling | Tailwind CSS v4 (custom token architecture) |
-| Charts | Recharts |
-| Maps | Google Maps JavaScript API + Visualization API (Heatmap) |
-| Icons | Lucide React |
-
-### Backend
-| Layer | Technology |
-|---|---|
-| API Framework | FastAPI (Python 3.12+) |
-| Server | Uvicorn (ASGI) |
-| Validation | Pydantic v2 |
-| Background Jobs | Celery + Redis |
-| Agent Orchestration | Custom Intent-Based Registry (no framework lock-in) |
-
-### Google Cloud & AI
-| Service | Usage |
-|---|---|
-| **Gemini 1.5 Flash** | Agent reasoning, alert summarization, blueprint generation |
-| **Google Cloud Document AI** | CITES permit + health certificate extraction |
-| **Google Cloud BigQuery** | Population analytics, transfer efficiency at scale |
-| **Google Maps JS API** | Zoonotic outbreak heatmap + animal location markers |
-| **Looker Studio** | Embedded stakeholder reports (Diversity Index, SLA Compliance) |
-| **Gmail API** | Transactional alert emails |
-
-### Databases
-| Database | Role |
-|---|---|
-| PostgreSQL (Neon) | Transactional data, audit logs, transfer records |
-| Neo4j AuraDB | Knowledge graph: animal lineage, zoo relationships, risk edges |
-
-### Notifications
-| Channel | Provider |
-|---|---|
-| Email | Gmail API (OAuth2) |
-| SMS | Twilio |
+| Category | Technology | Purpose |
+|---|---|---|
+| **Frontend Framework** | React 19 + TypeScript | Component-based UI with full type safety |
+| **Build Tool** | Vite 8 | Sub-second HMR and optimised production builds |
+| **Styling** | Tailwind CSS v4 | Utility-first CSS with custom design token architecture |
+| **Charts** | Recharts | Area and bar charts for SLA and alert dashboards |
+| **Maps** | Google Maps JS API + Visualization API | Zoonotic outbreak heatmap with weighted severity layers |
+| **Map Loader** | `@googlemaps/js-api-loader` | Singleton script loader — one Maps instance across all components |
+| **Icons** | Lucide React | Consistent icon system |
+| **HTTP Client** | Axios | Typed API calls from frontend to FastAPI backend |
+| **Backend Framework** | FastAPI (Python 3.12+) | High-performance async REST API |
+| **ASGI Server** | Uvicorn | Production-grade async server |
+| **Validation** | Pydantic v2 + pydantic-settings | Request/response schemas and `.env` config management |
+| **Agent Orchestration** | Custom Intent Registry | Modular agent routing with no framework lock-in |
+| **Background Jobs** | Celery + Redis | Async SLA monitoring and scheduled alert dispatch |
+| **LLM** | Gemini 1.5 Flash (`google-genai`) | Agent reasoning, alert generation, blueprint summarization |
+| **Embeddings** | `text-embedding-004` | Semantic vector search for the Matching Agent |
+| **Document Extraction** | Google Cloud Document AI | Structured field extraction from CITES permits and vet certificates |
+| **Analytics Warehouse** | Google Cloud BigQuery | Species inbreeding CoI, genetic diversity index, transfer efficiency |
+| **BI Reporting** | Looker Studio | Embedded stakeholder dashboards backed by BigQuery |
+| **Email Alerts** | Gmail API (OAuth2) | Transactional outbreak and SLA breach notifications |
+| **SMS Alerts** | Twilio | Emergency SMS for critical zoonotic events |
+| **Relational DB** | PostgreSQL on Neon | Transfers, audit logs, permit records |
+| **Graph DB** | Neo4j AuraDB | Animal lineage, zoo relationships, and risk edges |
+| **Auth (planned)** | Firebase Authentication | Google SSO for institutional access control |
+| **Secrets (planned)** | Google Cloud Secret Manager | Production-grade API key management |
 
 ---
 
