@@ -5,7 +5,7 @@
 [![Stack](https://img.shields.io/badge/Stack-FastAPI%20%7C%20React%20%7C%20Gemini-green)](#)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](#)
 
-> GDGKL myHack2026 Finalist Submission 🏅
+> **GDGKL myHack2026 Finalist Submission** 🏅
 
 > **Programmable relationships for the animal health economy** — connecting zoos, vets, and regulators through AI-native workflows, live SLA monitoring, and a real-time zoonotic alert system.
 
