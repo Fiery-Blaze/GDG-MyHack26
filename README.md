@@ -5,7 +5,18 @@
 [![Stack](https://img.shields.io/badge/Stack-FastAPI%20%7C%20React%20%7C%20Gemini-green)](#)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](#)
 
+> GDGKL myHack2026 Finalist Project 🏅
+
 > **Programmable relationships for the animal health economy** — connecting zoos, vets, and regulators through AI-native workflows, live SLA monitoring, and a real-time zoonotic alert system.
+
+## 👥 Team
+
+**saltAndPepperChips** — GDG MyHack 2026
+
+| Name | Role | Responsibilities |
+|------|------|-----------------|
+| **Krishna** | Backend Developer | FastAPI agents, database schemas, deployment, video pitch |
+| **Francis** | Frontend Developer & Business Lead | React UI, UX design, business strategy, market research |
 
 ---
 
@@ -147,14 +158,3 @@ VITE_GOOGLE_MAPS_API_KEY=your_maps_api_key
 - [ ] Firebase Authentication (Google SSO)
 - [ ] Celery + Redis workers (live SLA monitoring)
 - [ ] Google Cloud Vision (microchip photo verification)
-
----
-
-## 👥 Team
-
-**saltAndPepperChips** — GDG MyHack 2026
-
-| Name | Role | Responsibilities |
-|------|------|-----------------|
-| **Krishna** | Backend Developer | FastAPI agents, database schemas, deployment, video pitch |
-| **Francis** | Frontend Developer & Business Lead | React UI, UX design, business strategy, market research |
